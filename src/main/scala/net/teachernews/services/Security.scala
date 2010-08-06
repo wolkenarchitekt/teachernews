@@ -27,16 +27,16 @@ import net.teachernews.services.Application.md5hash
 @SessionScoped
 @Named @serializable
 class Security {
-  @EJB									var userEJB:UserEJB = _
+  @EJB                  var userEJB:UserEJB = _
 
-  @BeanProperty 				var user:User = new User
-  @BooleanBeanProperty 	var loggedIn = false
-  @Inject @transient		var log:Logger = _
+  @BeanProperty         var user:User = new User
+  @BooleanBeanProperty   var loggedIn = false
+  @Inject @transient    var log:Logger = _
   
-  @Inject 							var facesContext: FacesContext = _
-  @Inject @transient 		var flash:Flash = _
-  @Inject								var session:HttpSession = _
-  @Inject	@transient    var request:HttpServletRequest = _
+  @Inject               var facesContext: FacesContext = _
+  @Inject @transient     var flash:Flash = _
+  @Inject                var session:HttpSession = _
+  @Inject  @transient    var request:HttpServletRequest = _
   
   def isDeanery = user.role == RoleType.DEANERY
   def isTeacher = user.role == RoleType.TEACHER

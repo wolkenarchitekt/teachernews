@@ -74,10 +74,10 @@ class CustomExceptionHandler(private val parent: ExceptionHandler) extends Excep
           exception.isInstanceOf[ContextNotActiveException]) {
         // Navigate to error page, display exception message
         try {
-        	flash.put("exceptionType", "exception.SessionTimeoutException")
-        	val sec:Security = Application.getSecurityBean
-        	val user = sec.user
-        	log.error("Logged in user:" + user + "experienced Exception:" + exception.toString)
+          flash.put("exceptionType", "exception.SessionTimeoutException")
+          val sec:Security = Application.getSecurityBean
+          val user = sec.user
+          log.error("Logged in user:" + user + "experienced Exception:" + exception.toString)
           nav.handleNavigation(fc, null, currentPage)
           fc.renderResponse
         } finally {
@@ -87,7 +87,7 @@ class CustomExceptionHandler(private val parent: ExceptionHandler) extends Excep
       }
       // Handle Custom Exceptions
       else {
-      	// Search for a RuntimeException in Queue
+        // Search for a RuntimeException in Queue
         var appExc:ApplicationException = null
         try {
           appExc = exception.getCause.getCause.getCause.asInstanceOf[ApplicationException]
@@ -110,7 +110,7 @@ class CustomExceptionHandler(private val parent: ExceptionHandler) extends Excep
       
       // At this point, the queue will not conatin any ViewExpiredEvents.
       // Thererfore, let the parent handle them
-      getWrapped.handle	 	  
+      getWrapped.handle       
     }
   }
 }

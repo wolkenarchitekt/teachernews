@@ -32,18 +32,18 @@ import net.teachernews.services.Security
 @Named @serializable
 class MessageManager {
   @EJB                  var messageEJB:MessageEJB = _
-  @EJB									var emailEJB:EmailEJB = _
-  @EJB									var subscriptionEJB:SubscriptionEJB = _
+  @EJB                  var emailEJB:EmailEJB = _
+  @EJB                  var subscriptionEJB:SubscriptionEJB = _
   @Inject               var security:Security = _
   @Inject @transient    var flash:Flash = _
-  @Inject @transient		var log:Logger = _
-  @Inject								var nav:NavigationHandler = _
-  @Inject								var fc:FacesContext = _
+  @Inject @transient    var log:Logger = _
+  @Inject                var nav:NavigationHandler = _
+  @Inject                var fc:FacesContext = _
   
   @BeanProperty         var message:Message = new Message
-  @BooleanBeanProperty 	var sendAsEmail:Boolean = false
+  @BooleanBeanProperty   var sendAsEmail:Boolean = false
   
-  @Inject								var conversation:Conversation = _
+  @Inject                var conversation:Conversation = _
   
   var progress:Future[ApplicationException] = _
   
@@ -61,9 +61,9 @@ class MessageManager {
    * @return <strong>navigate to:</strong> messages_create.xhtml
    */
   def startConversation:String = {
-  	exception = null
-  	if (conversation.isTransient) conversation.begin
-  	"/teacher/message_create?" + REDIRECT_WITH_CONV + conversation.getId
+    exception = null
+    if (conversation.isTransient) conversation.begin
+    "/teacher/message_create?" + REDIRECT_WITH_CONV + conversation.getId
   }
   
   /**
@@ -72,27 +72,27 @@ class MessageManager {
    * @return busy status. true, if asynchronous method is still processing, else false.
    */
   def getBusy:Boolean = 
-  	progress match {
-  		case x:Future[ApplicationException] => {
-  			if (x.isDone) {
-  				// Sending mails finished. Error ocurred.
-  				if (x.get != null) {
-  					this.exception = x.get
-  					false
-  				}
-  				// Sending mails finished successfully.
-  				else { 
-  					if (conversation.isTransient) 
-  						conversation.end
-  					false
-  				}
-  			}
-  			// Sending mails is still in process.
-				else true
-  		}
-  		// No process running.
-  		case _ => false
-  	}
+    progress match {
+      case x:Future[ApplicationException] => {
+        if (x.isDone) {
+          // Sending mails finished. Error ocurred.
+          if (x.get != null) {
+            this.exception = x.get
+            false
+          }
+          // Sending mails finished successfully.
+          else { 
+            if (conversation.isTransient) 
+              conversation.end
+            false
+          }
+        }
+        // Sending mails is still in process.
+        else true
+      }
+      // No process running.
+      case _ => false
+    }
 
   /**
    * Save message and if needed send it as E-Mail
@@ -128,9 +128,9 @@ class MessageManager {
    * @return <strong>navigate to:</strong> message_view.xhtml
    */
   def viewMessage(message:Message):String = {
-  	if (conversation.isTransient) 
-  		conversation.begin
-  	this.message = message
+    if (conversation.isTransient) 
+      conversation.begin
+    this.message = message
     "/message_details?" + REDIRECT_WITH_CONV + conversation.getId
   }
 }

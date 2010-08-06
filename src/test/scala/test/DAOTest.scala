@@ -22,7 +22,7 @@ import net.teachernews.ejb.{MessageEJB, UserEJB, SubscriptionEJB}
 object DAOTest {
   var emf: EntityManagerFactory = _
   var em: EntityManager = _
-  var tx: EntityTransaction = _	
+  var tx: EntityTransaction = _  
 
   var userEJB:UserEJB = new UserEJB
   var messageEJB:MessageEJB = new MessageEJB
@@ -33,14 +33,14 @@ object DAOTest {
    */
   @BeforeClass
   def initEntityManager = {
-  	DAOTest.emf = Persistence.createEntityManagerFactory("teachernewsPU")
+    DAOTest.emf = Persistence.createEntityManagerFactory("teachernewsPU")
     DAOTest.em = DAOTest.emf.createEntityManager
     
     userEJB.em = DAOTest.em
     messageEJB.em = DAOTest.em
     subscriptionEJB.em = DAOTest.em
   }
-	
+  
   @AfterClass
   def closeEntityManager = {
     if (DAOTest.em.isOpen) DAOTest.em.close
@@ -50,10 +50,10 @@ object DAOTest {
 
 @Test
 class DAOTest {
-	import DAOTest.userEJB
-	import DAOTest.messageEJB
-	import DAOTest.subscriptionEJB
-	
+  import DAOTest.userEJB
+  import DAOTest.messageEJB
+  import DAOTest.subscriptionEJB
+  
   @Test
   def testUserEJB = {
     val mmuster = new User
@@ -61,7 +61,7 @@ class DAOTest {
     mmuster.firstName  = "Mustermann"
     mmuster.title = Title.MR
     mmuster.email = "mmustermann@example.com"
-  	mmuster.role = RoleType.TEACHER
+    mmuster.role = RoleType.TEACHER
     mmuster.setPassword("muster1234")
 
     val egabler = new User
@@ -69,7 +69,7 @@ class DAOTest {
     egabler.firstName = "Erika"
     egabler.title = Title.MS
     egabler.email = "egabler@example.com"
-  	egabler.role = RoleType.TEACHER
+    egabler.role = RoleType.TEACHER
     egabler.setPassword("gabler1234")
     
     val ifischer = new User
@@ -77,7 +77,7 @@ class DAOTest {
     ifischer.firstName  = "Ingo"
     ifischer.title = Title.MR
     ifischer.email = "ifischer@example.com"
-  	ifischer.role = RoleType.STUDENT
+    ifischer.role = RoleType.STUDENT
     ifischer.setPassword("ifischer1234")
     
     val tx = DAOTest.em.getTransaction
@@ -87,19 +87,19 @@ class DAOTest {
     userEJB.persist(egabler)
     tx.commit
     
-  	val users = userEJB.findBy(User_.name -> "Fischer")
+    val users = userEJB.findBy(User_.name -> "Fischer")
     assertEquals(users.size, 1);
-  	
-  	val userList = userEJB.findAll
-  	assertEquals(userList.size, 3);
+    
+    val userList = userEJB.findAll
+    assertEquals(userList.size, 3);
   }
   
-	/**
-	 * Test MessageEJB
-	 */
+  /**
+   * Test MessageEJB
+   */
   @Test(dependsOnMethods = Array("testUserEJB")) 
   def testMessageEJB = {
-  	val mmuster = userEJB.findBy(User_.email -> "mmustermann@example.com").get(0)
+    val mmuster = userEJB.findBy(User_.email -> "mmustermann@example.com").get(0)
     
     val nachricht = new Message
     nachricht.content = "Ich bin krank!"
@@ -122,22 +122,22 @@ class DAOTest {
   
   @Test(dependsOnMethods = Array("testUserEJB")) 
   def testSubscriptionEJB = {
-  	val mmuster = userEJB.findBy(User_.email -> "mmustermann@example.com").get(0)
-  	val ifischer= userEJB.findBy(User_.email -> "ifischer@example.com").get(0)
+    val mmuster = userEJB.findBy(User_.email -> "mmustermann@example.com").get(0)
+    val ifischer= userEJB.findBy(User_.email -> "ifischer@example.com").get(0)
     
-  	val sub = new Subscription
-  	sub.sender = mmuster
-  	sub.subscriber = ifischer
-  	
+    val sub = new Subscription
+    sub.sender = mmuster
+    sub.subscriber = ifischer
+    
     val tx = DAOTest.em.getTransaction
     tx.begin
     subscriptionEJB.persist(sub)
     tx.commit
     
     val newSub = subscriptionEJB.findBy(
-    		(Subscription_.sender -> mmuster),
-    		(Subscription_.subscriber -> ifischer)
-		).get(0)
+        (Subscription_.sender -> mmuster),
+        (Subscription_.subscriber -> ifischer)
+    ).get(0)
     
     assertNotNull(newSub)
   }

@@ -21,9 +21,9 @@ import net.teachernews.services.Application.md5hash
 // User is a reserved keyword in Apache Derby, rename table
 @Table(name="tnuser")
 class User extends EntityBase {
-	@Id @GeneratedValue @BeanProperty
+  @Id @GeneratedValue @BeanProperty
   var id: Long = _
-	
+  
   @NotNull @BeanProperty
   @Email @Column(unique = true)
   var email: String = _
@@ -51,14 +51,14 @@ class User extends EntityBase {
     password = md5hash(password)
     
   override def toString = 
-  	classOf[User].getName +
-  	" id=[" + id + "]" +  
-  	" email=[" + email + "]" + 
-	  " name=[" + name + "]" + 
-	  " firstName=[" + firstName + "]" + 
-	  " role=[" + role + "]" +
-	  " version=[" + version + "]" 
-	
+    classOf[User].getName +
+    " id=[" + id + "]" +  
+    " email=[" + email + "]" + 
+    " name=[" + name + "]" + 
+    " firstName=[" + firstName + "]" + 
+    " role=[" + role + "]" +
+    " version=[" + version + "]" 
+  
   override def equals(other:Any):Boolean = 
     other match {
       case that: User => id == that.id

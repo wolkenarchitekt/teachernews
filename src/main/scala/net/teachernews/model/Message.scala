@@ -15,29 +15,29 @@ import scala.reflect.BeanProperty
  */
 @Entity @serializable
 class Message extends EntityBase {
-	@Id @GeneratedValue @BeanProperty
+  @Id @GeneratedValue @BeanProperty
   var id: Long = _
-	
+  
   @NotNull @BeanProperty
   @Lob
   var content: String = _
-	
+  
   @NotNull @BeanProperty
   @Temporal(TemporalType.TIMESTAMP)
   var expirationDate: Date = _
-	
+  
   @NotNull @BeanProperty
   @ManyToOne
   var regards: User = _
   
   override def toString = 
-  	classOf[Message].getName + 
-  	" id=[" + id + "]" +  
-	  " content=[" + content  + "]" + 
-  	" expirationDate=[" + expirationDate + "]" + 
-	  " regards=[" + regards + "]" + 
-	  " version=[" + version + "]"
-	  
+    classOf[Message].getName + 
+    " id=[" + id + "]" +  
+    " content=[" + content  + "]" + 
+    " expirationDate=[" + expirationDate + "]" + 
+    " regards=[" + regards + "]" + 
+    " version=[" + version + "]"
+    
   override def equals(other:Any):Boolean = 
     other match {
       case that: Message => id == that.id

@@ -22,12 +22,12 @@ import net.teachernews.ejb.UserEJB
 class SubscriptionListConverter extends Converter {
   val ctx:Context = new InitialContext
   val userEJB = ctx.lookup("java:global/teachernews/UserEJB").asInstanceOf[UserEJB]
-	
+  
   def getAsObject(ctx:FacesContext, comp:UIComponent, value:String):Object = {
     val id:java.lang.Long = java.lang.Long.parseLong(value)
     userEJB.findBy(User_.id -> id).get(0)
   }
-	
+  
   def getAsString(ctx:FacesContext, comp:UIComponent, value:Object):String = {
     val user:User = value.asInstanceOf[User]
     user.id.toString

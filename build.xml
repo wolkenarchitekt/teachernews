@@ -6,10 +6,10 @@
     It MUST be run at least once before deploying Teachernews. 
   -->
   
-	<property environment="env" />
-	<property file="teachernews.properties" prefix="conf" />
-	
-	<filter filtersfile="${basedir}/teachernews.properties"/>
+  <property environment="env" />
+  <property file="teachernews.properties" prefix="conf" />
+  
+  <filter filtersfile="${basedir}/teachernews.properties"/>
   
   <target name="main">
     <antcall target="maven-env-check"/>

@@ -12,22 +12,22 @@ import scala.reflect.BeanProperty
  */
 @Entity @serializable
 class Subscription extends EntityBase {
-	@Id @GeneratedValue @BeanProperty
+  @Id @GeneratedValue @BeanProperty
   var id: Long = _
 
   @NotNull @BeanProperty
   @ManyToOne
   var subscriber: User = _
-	
+  
   @NotNull @BeanProperty
   @ManyToOne
   var sender: User = _
 
   override def toString = 
-  	classOf[Subscription].getName
-  	" subscriber=[" + subscriber + "]" 
-	  " sender=[" + sender + "]"
-	  
+    classOf[Subscription].getName
+    " subscriber=[" + subscriber + "]" 
+    " sender=[" + sender + "]"
+    
   override def equals(other:Any):Boolean = 
     other match {
       case that: Subscription => id == that.id

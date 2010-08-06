@@ -46,10 +46,10 @@ class EmailEJB {
    * @param Message where FROM-params are inserted
    */
   def setFromParameters(msg:Message) = {
-  	val mailProperties = mailSession.getProperties
-  	val mailfromAddress = mailProperties.getProperty("mail.from.address")
-  	val mailfromName = mailProperties.getProperty("mail.from.name")
-  	msg.addFrom(Array(new InternetAddress(mailfromAddress,mailfromName)))
+    val mailProperties = mailSession.getProperties
+    val mailfromAddress = mailProperties.getProperty("mail.from.address")
+    val mailfromName = mailProperties.getProperty("mail.from.name")
+    msg.addFrom(Array(new InternetAddress(mailfromAddress,mailfromName)))
   }
   
   /**
@@ -58,18 +58,18 @@ class EmailEJB {
    * @param password
    */
   def sendPassword(email:String, password:String) = {
-  	val msg:javax.mail.Message = new MimeMessage(mailSession)
-  	setFromParameters(msg) 
+    val msg:javax.mail.Message = new MimeMessage(mailSession)
+    setFromParameters(msg) 
     msg.setSubject(bundle.getString("application.name") + ": " + 
                    bundle.getString("user.mail.newpassword"))
     msg.setText(bundle.getString("user.mail.newpassword.text") + password)
     msg.addRecipient(javax.mail.Message.RecipientType.TO,new InternetAddress(email))
     try {
-    	Transport.send(msg)
+      Transport.send(msg)
     } 
-  	catch {
-    	case ex:Exception => 
-    		throw new ApplicationException(ExceptionType.SendMailFailed, ex)
+    catch {
+      case ex:Exception => 
+        throw new ApplicationException(ExceptionType.SendMailFailed, ex)
     }
     //val test = javax.faces.application.
     flash.put("info", "user.mail.newpassword.sent")
@@ -85,34 +85,34 @@ class EmailEJB {
    */
   @Asynchronous
   def sendEmails(sender:User, message:TNMessage):Future[ApplicationException] = {
-  	log.info("Sending mail.")
+    log.info("Sending mail.")
     // Reset progress
     val msg:javax.mail.Message = new MimeMessage(mailSession)
-  	setFromParameters(msg)
+    setFromParameters(msg)
     // Find all users subscribed to this teacher
     val subscriptions = subsEJB.findBy(Subscription_.sender -> sender)
     val dateString = locale.toString match {
-    	case "de" => new SimpleDateFormat("dd.MM.yyyy").format(message.expirationDate)
-    	case _ 		=> new SimpleDateFormat("dd/MM/yyyy").format(message.expirationDate)
+      case "de" => new SimpleDateFormat("dd.MM.yyyy").format(message.expirationDate)
+      case _     => new SimpleDateFormat("dd/MM/yyyy").format(message.expirationDate)
     }
     for(sub <- subscriptions) 
       msg.addRecipient( javax.mail.Message.RecipientType.BCC,
-      									new InternetAddress(sub.subscriber.email))
-  	msg.setSubject( bundle.getString("message.mail.title") + " " + 
-										sender.name + ", " + sender.firstName + ", " + 
-										bundle.getString("message.mail.expiration") + " " + 
-										dateString)
-		msg.setText(message.content + bundle.getString("message.mail.appendix"))
+                        new InternetAddress(sub.subscriber.email))
+    msg.setSubject( bundle.getString("message.mail.title") + " " + 
+                    sender.name + ", " + sender.firstName + ", " + 
+                    bundle.getString("message.mail.expiration") + " " + 
+                    dateString)
+    msg.setText(message.content + bundle.getString("message.mail.appendix"))
     try {
-    	Transport.send(msg)
+      Transport.send(msg)
     }catch {
       case ex:Exception => {
-      	log.info("Error sending mail:" + ex.getMessage)
-      	return new AsyncResult(
-      			new ApplicationException(ExceptionType.SendMailFailed, ex))
+        log.info("Error sending mail:" + ex.getMessage)
+        return new AsyncResult(
+            new ApplicationException(ExceptionType.SendMailFailed, ex))
       }
     }
-  	log.info("Mails send")
+    log.info("Mails send")
     return new AsyncResult(null)
   }
 }

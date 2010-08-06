@@ -27,12 +27,12 @@
     <hsqldb.version>1.8.0.10</hsqldb.version>
     <weld.extensions.version>1.0.0-CR2</weld.extensions.version>
     <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
-	
-	<domain.adminport>4848</domain.adminport>
-	<domain.httpport>8080</domain.httpport>
-	<domain.httpsport>8443</domain.httpsport>
-	<domain.iiopport>3700</domain.iiopport>
-	<domain.jmsport>7676</domain.jmsport>
+  
+  <domain.adminport>4848</domain.adminport>
+  <domain.httpport>8080</domain.httpport>
+  <domain.httpsport>8443</domain.httpsport>
+  <domain.iiopport>3700</domain.iiopport>
+  <domain.jmsport>7676</domain.jmsport>
   </properties>
 
   <repositories>
@@ -234,7 +234,7 @@
        <version>1.0.0.Beta2</version>
        <scope>provided</scope>
     </dependency>
-  	-->
+    -->
   
     <dependency>
         <groupId>org.glassfish</groupId>
@@ -627,7 +627,7 @@
           <debug>true</debug>
           <echo>true</echo>
           <domain>
-		        <name>${project.artifactId}</name>
+            <name>${project.artifactId}</name>
             <adminPort>${domain.adminport}</adminPort>
             <httpPort>${domain.httpport}</httpPort>
             <httpsPort>${domain.httpsport}</httpsPort>

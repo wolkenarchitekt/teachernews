@@ -8,21 +8,21 @@
   template="/WEB-INF/templates/default.xhtml">
   <ui:define name="content">
     <script type="text/javascript">
-    	// Check if server is still busy. 
+      // Check if server is still busy. 
       // Show if sending e-mails was successful or if it resulted in an error.
-    	function handlePollRequestComplete(xhr, status, args) {
-    		var busyField = document.getElementById('pollform:txt_progress_hidden').firstChild;
-    		var statusField = document.getElementById('pollform:txt_status').firstChild;
-    		var errorField = document.getElementById('pollform:txt_error').firstChild;
-    		if (busyField.data == 'false') {
-    			progresspoll.stop();
-    			if (errorField == null) {
-    				statusField.data = "#{bundle['message.mail.status.sent']}";
-    			} else {
-    				statusField.data = "#{bundle['error.title']}:";
-    			}
-    		}
-    	}
+      function handlePollRequestComplete(xhr, status, args) {
+        var busyField = document.getElementById('pollform:txt_progress_hidden').firstChild;
+        var statusField = document.getElementById('pollform:txt_status').firstChild;
+        var errorField = document.getElementById('pollform:txt_error').firstChild;
+        if (busyField.data == 'false') {
+          progresspoll.stop();
+          if (errorField == null) {
+            statusField.data = "#{bundle['message.mail.status.sent']}";
+          } else {
+            statusField.data = "#{bundle['error.title']}:";
+          }
+        }
+      }
     </script>
     <h1>#{bundle['application.name']}</h1>
     <h:form id="pollform">

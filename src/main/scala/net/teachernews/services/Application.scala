@@ -33,7 +33,7 @@ class Boot{
   @Resource(name = "tnAdminProperties")
   @transient
   var adminSettings:Properties = _
-	
+  
   @Inject
   var userEJB:UserEJB = _
   
@@ -49,7 +49,7 @@ class Boot{
     val adminMail = adminSettings.getProperty("admin.email")
     val users = userEJB.findBy(User_.email -> adminMail)
     if (users.size == 0) {
-    	log.info("No admin in database. Inserting.");
+      log.info("No admin in database. Inserting.");
       val admin = new User
       admin.name = adminSettings.getProperty("admin.name")
       admin.firstName = adminSettings.getProperty("admin.firstName")
@@ -96,11 +96,11 @@ object Application {
    */
   def getSecurityBean:Security =  {
     val manager:BeanManager = 
-    	new InitialContext().lookup("java:comp/BeanManager").asInstanceOf[BeanManager];
+      new InitialContext().lookup("java:comp/BeanManager").asInstanceOf[BeanManager];
     val myBean:Bean[Security] = 
-  		manager.getBeans(classOf[Security]).iterator.next.asInstanceOf[Bean[Security]]
+      manager.getBeans(classOf[Security]).iterator.next.asInstanceOf[Bean[Security]]
     manager.getReference(myBean, classOf[Security], 
-			manager.createCreationalContext(myBean)).asInstanceOf[Security]
+      manager.createCreationalContext(myBean)).asInstanceOf[Security]
   }
 
   
@@ -123,13 +123,13 @@ object Application {
    * @return Random password hash
    */
   def generatePW:String = {
-  	val rand = new java.util.Random
-  	val genPW = new StringBuilder
-  	val loops = 2
-  	(0 to loops).foreach {
-  		genPW.append(Integer.toHexString(Math.abs(rand.nextInt)))
-  	}
-  	genPW.toString
+    val rand = new java.util.Random
+    val genPW = new StringBuilder
+    val loops = 2
+    (0 to loops).foreach {
+      genPW.append(Integer.toHexString(Math.abs(rand.nextInt)))
+    }
+    genPW.toString
   }
   
 }

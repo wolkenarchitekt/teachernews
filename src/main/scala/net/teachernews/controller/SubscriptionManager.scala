@@ -29,20 +29,20 @@ import net.teachernews.model.{Message, Message_, Subscription, Subscription_, Us
 @Named @serializable
 @Inject
 class SubscriptionManager {
-  @EJB          				var subscriptionEJB:SubscriptionEJB = _
-  @EJB          				var userEJB:UserEJB = _
-  @EJB          				var messageEJB:MessageEJB = _
-  @Inject        				var security:Security = _
-  @Inject @transient		var log:Logger = _
-  @Inject       				var conversation:Conversation = _
-  @Inject       				var facesContext: FacesContext = _
-  @Inject       				var locale: Locale = _
-  @Inject       				var nav:NavigationHandler = _
-  @Inject @transient 		var bundle:ResourceBundle = _
-  @Inject @transient 		var flash:Flash = _
+  @EJB                  var subscriptionEJB:SubscriptionEJB = _
+  @EJB                  var userEJB:UserEJB = _
+  @EJB                  var messageEJB:MessageEJB = _
+  @Inject                var security:Security = _
+  @Inject @transient    var log:Logger = _
+  @Inject               var conversation:Conversation = _
+  @Inject               var facesContext: FacesContext = _
+  @Inject               var locale: Locale = _
+  @Inject               var nav:NavigationHandler = _
+  @Inject @transient     var bundle:ResourceBundle = _
+  @Inject @transient     var flash:Flash = _
   
-  @BeanProperty 				var confirmPassword:String = _
-  @BooleanBeanProperty 	var sendAsEmail:Boolean = false
+  @BeanProperty         var confirmPassword:String = _
+  @BooleanBeanProperty   var sendAsEmail:Boolean = false
   
   // Current subscriptions
   var subscriptions:DualListModel[User] = _
@@ -74,10 +74,10 @@ class SubscriptionManager {
     
     // Remove currently logged in user
     sourceList -= security.user
-		
+    
     // Save subscription
     subsBefore = new DualListModel[User](sourceList, subscribedToUsers)
-		subscriptions = new DualListModel[User](sourceList, subscribedToUsers)
+    subscriptions = new DualListModel[User](sourceList, subscribedToUsers)
     
     subsDirty = false
   }
@@ -90,7 +90,7 @@ class SubscriptionManager {
    */
   def getSubscriptions:DualListModel[User] = {
     if (subsDirty) 
-    	initSubscriptionList
+      initSubscriptionList
     subscriptions
   }
   def setSubscriptions(subs:DualListModel[User]) = this.subscriptions = subs 
@@ -101,15 +101,15 @@ class SubscriptionManager {
    * @return messages regarding users the subscriber subscribed to
    */
   def getSubMessages(user:User):ArrayList[Message] = {
-		// Get all subscriptions
-		val subList = subscriptionEJB.findBy(Subscription_.subscriber -> user)
-		// Extract users
-		var results = new ArrayList[Message] 
-		val subUsers = for (val sub <- subList) yield sub.sender
-		// Build up array of messages regarding the found users
-		for (user <- subUsers)
-			results ++ messageEJB.findBy(Message_.regards -> user)
-		results
+    // Get all subscriptions
+    val subList = subscriptionEJB.findBy(Subscription_.subscriber -> user)
+    // Extract users
+    var results = new ArrayList[Message] 
+    val subUsers = for (val sub <- subList) yield sub.sender
+    // Build up array of messages regarding the found users
+    for (user <- subUsers)
+      results ++ messageEJB.findBy(Message_.regards -> user)
+    results
   }
   
   /**
@@ -118,12 +118,12 @@ class SubscriptionManager {
    * @return <strong>navigate to: </strong> /user/subscriptions.xhtml
    */
   def updateSubscriptions:String = {
-  	// No changes
+    // No changes
     if (subscriptions.getTarget.size == subsBefore.getTarget.size) {
       subsDirty = false
       return "/user/subscriptions?" + REDIRECT
     }
-  	
+    
     // If new subscriptions where added 
     if (subscriptions.getTarget.size > subsBefore.getTarget.size) {
       // Create new subscriptions
@@ -162,5 +162,5 @@ class SubscriptionManager {
    * @return number of subscribers 
    */
   def getSubscribersCount:Integer = 
-  	subscriptionEJB.findBy(Subscription_.sender -> security.user).size
+    subscriptionEJB.findBy(Subscription_.sender -> security.user).size
 }

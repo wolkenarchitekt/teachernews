@@ -24,7 +24,7 @@ import org.slf4j.Logger
 @LocalBean
 @DeclareRoles(Array("TEACHER", "DEANERY"))
 class MessageEJB extends DAO[Message, Long] {
-  @Inject @transient      				
+  @Inject @transient              
   var log:Logger = _
   
   @RolesAllowed(Array("TEACHER", "DEANERY"))

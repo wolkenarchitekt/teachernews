@@ -27,19 +27,19 @@ import net.teachernews.services.Security
 @SessionScoped
 @Named @serializable
 class UserManager {
-  @EJB          			var userEJB:UserEJB = _
-  @Inject       			var facesContext: FacesContext = _
-  @Inject 						var locale: Locale = _
-  @Inject       			var nav:NavigationHandler = _
-  @Inject 						var emailEJB:EmailEJB = _
-  @Inject 						var security:Security = _
+  @EJB                var userEJB:UserEJB = _
+  @Inject             var facesContext: FacesContext = _
+  @Inject             var locale: Locale = _
+  @Inject             var nav:NavigationHandler = _
+  @Inject             var emailEJB:EmailEJB = _
+  @Inject             var security:Security = _
 
-  @Inject @transient	var log:Logger = _
-  @Inject @transient 	var bundle:ResourceBundle = _
-  @Inject @transient 	var flash:Flash = _
+  @Inject @transient  var log:Logger = _
+  @Inject @transient   var bundle:ResourceBundle = _
+  @Inject @transient   var flash:Flash = _
 
-  @BeanProperty 			var user:User = new User
-  @BeanProperty 			var confirmPassword:String = _
+  @BeanProperty       var user:User = new User
+  @BeanProperty       var confirmPassword:String = _
   
   var oldMail:String = _
   var oldPWHash:String = _
@@ -81,8 +81,8 @@ class UserManager {
    * @return <strong>navigate to:</strong> /home.xhtml
    */
   def registerUser:String = {
-  	checkPasswordEquality
-  	checkEmailAvailable
+    checkPasswordEquality
+    checkEmailAvailable
     user.role = RoleType.STUDENT
     // save password before its hashed for login
     val clearPW = user.password
@@ -99,7 +99,7 @@ class UserManager {
    * @return <strong>navigate to:</strong> /user/edituser.xhtml
    */
   def updateUser(user:User):String = {
-  	oldMail = user.email
+    oldMail = user.email
     oldPWHash = user.password
     this.confirmPassword = oldPWHash
     this.user = user
@@ -111,18 +111,18 @@ class UserManager {
    * @return <strong>navigate to:</strong> /user/edituser.xhtml 
    */
   def confirmModifications = {
-  	if (user.password != oldPWHash) {
-  		checkPasswordEquality
-  		user.password = md5hash(user.password)
-  	}
-  	if (user.email != oldMail) 
-  		checkEmailAvailable
+    if (user.password != oldPWHash) {
+      checkPasswordEquality
+      user.password = md5hash(user.password)
+    }
+    if (user.email != oldMail) 
+      checkEmailAvailable
     user = userEJB.update(user)
     //if user edits himself, refresh security user accordingly
     if (user.id == security.user.id)
-    	security.user = user
+      security.user = user
     flash.put("info", "application.modificationsSaved")
-  	updateUser(user)
+    updateUser(user)
   }
   
   /**
@@ -144,16 +144,16 @@ class UserManager {
    * @return <strong>navigate to:</strong> /forgotpw.xhtml 
    */
   def forgotPassword:String  = {
-  	val email = flash.get("user.email").toString
-  	val userList = userEJB.findBy(User_.email -> email) 
-  	if (userList.size == 0)
-  		throw new ApplicationException(ExceptionType.EmailNotFoundException)
-  	val newPassword = TNApplication.generatePW
-  	val user = userList.get(0)
-  	user.password = md5hash(newPassword)
-  	userEJB.update(user)
-  	emailEJB.sendPassword(email, newPassword)
-  	"/forgotpw?" + REDIRECT
+    val email = flash.get("user.email").toString
+    val userList = userEJB.findBy(User_.email -> email) 
+    if (userList.size == 0)
+      throw new ApplicationException(ExceptionType.EmailNotFoundException)
+    val newPassword = TNApplication.generatePW
+    val user = userList.get(0)
+    user.password = md5hash(newPassword)
+    userEJB.update(user)
+    emailEJB.sendPassword(email, newPassword)
+    "/forgotpw?" + REDIRECT
   }
   
 }

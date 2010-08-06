@@ -33,13 +33,13 @@ trait DAO[T, K <: Serializable] {
    * @param entity entity to persist
    */
   def persist(entity: T)
-	
+  
   /**
    * Update entity
    * @param entity
    */
   def update(entity: T):T
-	
+  
   /**
    * Delete entity matching this id
    * @param id of entity to remove
@@ -52,7 +52,7 @@ trait DAO[T, K <: Serializable] {
    * @return the list of all entities for that DAO
    */
   def findAll(): ArrayList[T]
-	
+  
   /**
    * Retrieve entities, filter by given attribute-value pairs.
    * Predicates are concatenated with AND
@@ -60,7 +60,7 @@ trait DAO[T, K <: Serializable] {
    * @return resultList 
    */
   def findBy[A](attributes:AttributeValuePair[_]*):ArrayList[T]
-	
+  
 }
 
 

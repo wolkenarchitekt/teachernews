@@ -1,134 +1,134 @@
 body {
-	margin: 0;
-	padding: 0;
-	background-color: #EAECEE;
-	font-family: Verdana, sans-serif;
-	font-size: 0.8em;
+  margin: 0;
+  padding: 0;
+  background-color: #EAECEE;
+  font-family: Verdana, sans-serif;
+  font-size: 0.8em;
 }
 
 #container {
-	margin: 0 auto;
-	padding: 0px 20px 10px 20px;
-	border: 1px solid #666666;
-	width: 865px; /* subtract 40px from banner width for padding */
-	background: #FFFFFF;
-	/* url(#{request.contextPath}/resources/gfx/kopf_logo.gif) no-repeat;*/
-	/*padding-top: 110px;*/
+  margin: 0 auto;
+  padding: 0px 20px 10px 20px;
+  border: 1px solid #666666;
+  width: 865px; /* subtract 40px from banner width for padding */
+  background: #FFFFFF;
+  /* url(#{request.contextPath}/resources/gfx/kopf_logo.gif) no-repeat;*/
+  /*padding-top: 110px;*/
 }
 
 #header {
-	padding: 10px;
+  padding: 10px;
 }
 
 #content {
-	margin-top: 10px;
-	padding: 10px;
+  margin-top: 10px;
+  padding: 10px;
 }
 
 #footer {
-	clear: both;
-	text-align: center;
-	color: #666666;
-	font-size: 0.85em;
+  clear: both;
+  text-align: center;
+  color: #666666;
+  font-size: 0.85em;
 }
 
 ul#Navigation {
-	margin: 0px;
-	/*padding: 0.8em;*/
-	padding: 0px;
-	text-align: left;
-	border: none;
-	color: #008E8E;
+  margin: 0px;
+  /*padding: 0.8em;*/
+  padding: 0px;
+  text-align: left;
+  border: none;
+  color: #008E8E;
 }
 
 ul#Navigation li {
-	list-style: none;
-	display: inline;
-	/*margin: 0.4em;*/
-	margin-right: 20px;
-	padding: 0px;
+  list-style: none;
+  display: inline;
+  /*margin: 0.4em;*/
+  margin-right: 20px;
+  padding: 0px;
 }
 
 .navleft {
-	float: left;
+  float: left;
 }
 
 .navright {
-	float: right;
+  float: right;
 }
 
 .row1 td {
-	width: 150px;
+  width: 150px;
 }
 
 .detailsRow td {
-	padding: 10px;
+  padding: 10px;
 }
 
 #seperatorline {
-	border: solid #008E8E 1px;
-	height: 1px;
+  border: solid #008E8E 1px;
+  height: 1px;
 }
 
 code {
-	font-size: 1.1em;
+  font-size: 1.1em;
 }
 
 span.invalid {
-	padding-left: 3px;
-	color: red;
+  padding-left: 3px;
+  color: red;
 }
 
 span.error {
-	padding-left: 3px;
-	color: red;
+  padding-left: 3px;
+  color: red;
 }
 
 span.info {
-	color: green;
+  color: green;
 }
 
 .bold {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 #loggedin {
-	font-size: 0.85em;
-	float: right;
-	color: green;
-	margin-top: 50px;
+  font-size: 0.85em;
+  float: right;
+  color: green;
+  margin-top: 50px;
 }
 
 a img {
-	border: none;
+  border: none;
 }
 
 a,a:visited {
-	text-decoration: none;
-	color: #008E8E;
+  text-decoration: none;
+  color: #008E8E;
 }
 
 a:active,a:focus,a:link {
-	text-decoration: none;
-	color: #008E8E;
+  text-decoration: none;
+  color: #008E8E;
 }
 
 a:hover {
-	text-decoration: none;
-	color: #FF0000;
+  text-decoration: none;
+  color: #FF0000;
 }
 
 /* PrimeFaces */
 .pickPanel {
-	width: 500px;
+  width: 500px;
 }
 
 .ui-picklist-source {
-	width: 200px !important;
-	height: 300px !important;
+  width: 200px !important;
+  height: 300px !important;
 }
 
 .ui-picklist-target {
-	width: 200px !important;
-	height: 300px !important;
+  width: 200px !important;
+  height: 300px !important;
 }
