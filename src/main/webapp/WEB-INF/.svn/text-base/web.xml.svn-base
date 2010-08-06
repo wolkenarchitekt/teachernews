@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+  <!-- Show detailed error pages for development mode -->
+  <context-param>
+    <param-name>facelets.DEVELOPMENT</param-name>
+    <param-value>true</param-value>
+  </context-param>
+
+  <!-- Don't render comments -->
+  <context-param>
+    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  
+  <context-param>
+    <param-name>javax.faces.PROJECT_STAGE</param-name>   
+    <param-value>Development</param-value>
+  </context-param>
+
+  <!-- Needed when using PrimeFaces with Mojarra 2.x -->
+  <context-param>
+    <param-name>com.sun.faces.allowTextChildren</param-name>
+    <param-value>true</param-value>
+  </context-param>
+
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+  <!-- Redirect access of restricted pages to index.jsp -->
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>jdbc</realm-name>
+    <form-login-config>
+      <form-login-page>/index.jsp?login=login</form-login-page>
+      <form-error-page>/index.jsp?login=error</form-error-page>
+    </form-login-config>
+  </login-config>
+
+  <!-- Map roles from sun-web.xml -->
+  <security-role>
+    <description />
+    <role-name>STUDENT</role-name>
+  </security-role>
+  <security-role>
+    <description />
+    <role-name>TEACHER</role-name>
+  </security-role>
+  <security-role>
+    <description />
+    <role-name>DEANERY</role-name>
+  </security-role>
+
+  <!-- Restrict access for deanery related resources -->
+  <security-constraint>
+    <display-name>Deanery Constraint</display-name>
+    <web-resource-collection>
+      <web-resource-name>Deanery Content</web-resource-name>
+      <description />
+      <url-pattern>/deanery/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <description />
+      <role-name>DEANERY</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <!-- Restrict access for teacher related resources -->
+  <security-constraint>
+    <display-name>Teacher Constraint</display-name>
+    <web-resource-collection>
+      <web-resource-name>Teacher Content</web-resource-name>
+      <description />
+      <url-pattern>/teacher/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <description />
+      <role-name>TEACHER</role-name>
+      <role-name>DEANERY</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+    <!-- Restrict access for teacher related resources -->
+  <security-constraint>
+    <display-name>Login Constraint</display-name>
+    <web-resource-collection>
+      <web-resource-name>LoggedIn Content</web-resource-name>
+      <description />
+      <url-pattern>/user/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <description />
+      <role-name>STUDENT</role-name>
+      <role-name>TEACHER</role-name>
+      <role-name>DEANERY</role-name>
+    </auth-constraint>
+  </security-constraint>
+</web-app>

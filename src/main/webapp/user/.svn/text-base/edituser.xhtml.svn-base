@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:p="http://primefaces.prime.com.tr/ui"
+  template="/WEB-INF/templates/default.xhtml">
+  <ui:define name="content">
+    <h:form id="editUserForm">
+      <f:validateBean>
+        <h2>#{bundle['user.edit']}</h2>
+        <h:panelGrid columns="3" rowClasses="row1,row2,row3">
+          <h:outputLabel for="title" value="#{bundle['user.title']}:" />
+          <h:selectOneMenu id="title" value="#{userManager.user.title}"
+            converterMessage="#{bundle['application.selection.error']}">
+            <f:selectItem
+              itemLabel="#{bundle['application.selection.choose']}"
+              itemValue="null" />
+            <f:selectItems value="#{userManager.titleOptions}" />
+          </h:selectOneMenu>
+          <h:message for="title" errorClass="invalid" id="titleError" />
+
+          <h:outputLabel for="role" value="#{bundle['user.role']}:"
+            rendered="#{security.deanery}" />
+          <h:selectOneMenu id="role" value="#{userManager.user.role}"
+            immediate="true" rendered="#{security.deanery}">
+            <f:selectItems value="#{userManager.roleOptions}" />
+          </h:selectOneMenu>
+          <h:message for="role" errorClass="invalid" id="roleError"
+            rendered="#{security.deanery}" />
+
+          <h:outputLabel for="name" value="#{bundle['user.name']}:" />
+          <h:inputText id="name" value="#{userManager.user.name}"
+            validatorMessage="#{bundle['user.name.error']}">
+            <f:validateRequired />
+          </h:inputText>
+          <h:message for="name" errorClass="invalid" id="nameError" />
+
+          <h:outputLabel for="firstName"
+            value="#{bundle['user.firstName']}:" />
+          <h:inputText id="firstName"
+            value="#{userManager.user.firstName}"
+            validatorMessage="#{bundle['user.firstName.error']}">
+            <f:validateRequired />
+          </h:inputText>
+          <h:message for="firstName" errorClass="invalid"
+            id="firstNameError" />
+
+          <h:outputLabel for="email" value="#{bundle['user.email']}:" />
+          <h:inputText id="email" value="#{userManager.user.email}"
+            validatorMessage="#{bundle['user.email.error']}">
+            <f:validateRequired />
+          </h:inputText>
+          <h:message for="email" errorClass="invalid" id="emailError" />
+
+        </h:panelGrid>
+
+        <h:panelGrid columns="3"
+          rendered="#{security.user.email == userManager.user.email}"
+          rowClasses="row1,row2,row3">
+          <h:outputLabel for="password"
+            value="#{bundle['user.password']}:" />
+          <h:inputSecret id="password"
+            value="#{userManager.user.password}" redisplay="true"
+            validatorMessage="#{bundle['user.password.error']}">
+          </h:inputSecret>
+          <h:message for="password" errorClass="invalid"
+            id="passwordError" />
+
+          <h:outputLabel for="password2"
+            value="#{bundle['user.password.confirm']}:" />
+          <h:inputSecret id="password2"
+            value="#{userManager.confirmPassword}" redisplay="true" />
+          <h:message for="password2" errorClass="invalid"
+            id="password2Error" />
+        </h:panelGrid>
+
+        <h:commandButton id="insert"
+          action="#{userManager.confirmModifications}"
+          value="#{bundle['application.saveModifications']}">
+          <!--<f:ajax render="@form" />-->
+        </h:commandButton>
+        <h:commandButton id="remove" action="#{userManager.removeUser}"
+          rendered="#{(security.deanery) and 
+            (security.user.email !=  userManager.user.email)}"
+          value="#{bundle['user.remove']}" />
+        <h:commandButton action="/deanery/users?redirect=true"
+          value="#{bundle['application.back']}" />
+      </f:validateBean>
+    </h:form>
+  </ui:define>
+</ui:composition>

@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>teachernews</groupId>
+  <artifactId>teachernews</artifactId>
+  <name>teachernews</name>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <scala.version>2.8.0</scala.version>
+    <specs.version>1.6.5</specs.version>
+    <java.version>1.6</java.version>
+    <javaee-version>6.0</javaee-version>
+    <hibernate.version>3.5.4-Final</hibernate.version>
+    <hibernate-validator.version>4.0.2.GA</hibernate-validator.version>
+    <junit.version>4.8.1</junit.version>
+    <testng.version>5.13</testng.version>
+    <maven.scala.plugin.version>2.13.1</maven.scala.plugin.version>
+    <ant-contrib.version>1.0b3</ant-contrib.version>
+    <glassfish.home>${env.GLASSFISH}</glassfish.home>
+    <glassfish.version>3.0.1</glassfish.version>
+    <glassfish-embedded.version>3.0.1</glassfish-embedded.version>
+    <mysql-connector.version>5.1.12</mysql-connector.version>
+    <hsqldb.version>1.8.0.10</hsqldb.version>
+    <weld.extensions.version>1.0.0-CR2</weld.extensions.version>
+    <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
+	
+	<domain.adminport>4848</domain.adminport>
+	<domain.httpport>8080</domain.httpport>
+	<domain.httpsport>8443</domain.httpsport>
+	<domain.iiopport>3700</domain.iiopport>
+	<domain.jmsport>7676</domain.jmsport>
+  </properties>
+
+  <repositories>
+    <!-- Scala -->
+    <repository>
+      <id>scala-tools.org</id>
+      <name>Scala-Tools Maven2 Repository</name>
+      <url>http://scala-tools.org/repo-releases</url>
+    </repository>
+
+    <!-- Scala Latest -->
+    <repository>
+      <id>scala-tools.org.snapshots</id>
+      <name>Scala Tools Maven2 Repository</name>
+      <url>http://scala-tools.org/repo-snapshots</url>
+      <snapshots />
+    </repository>
+
+    <!-- Java.Net Maven2 Repo (Glassfish,JEE API) -->
+    <repository>
+      <id>maven2-repository.dev.java.net</id>
+      <name>Java.net Repository for Maven</name>
+      <url>http://download.java.net/maven/2/</url>
+      <layout>default</layout>
+    </repository>
+
+    <!-- JBoss (Hibernate) -->
+    <repository>
+      <id>jboss</id>
+      <name>JBoss repository</name>
+      <url>http://repository.jboss.org/maven2</url>
+    </repository>
+    
+    <repository>
+      <id>jboss.releases</id>
+      <url>http://oss.repository.sonatype.org/content/repositories/jboss-releases</url>
+    </repository>
+    
+    <!-- Hibernate 3.5.2 -->
+    <repository>
+      <id>jboss_hibernate</id>
+      <name>JBoss repository - Hibernate</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public/org/hibernate/hibernate-core</url>
+    </repository>
+
+    <!-- Glassfish -->
+    <repository>
+      <id>embedded-glassfish</id>
+      <name>Java.net Repository for Maven</name>
+      <url>http://maven.dyndns.org/glassfish</url>
+    </repository>
+
+    <!-- Glassfish -->
+    <repository>
+      <id>glassfish-repository</id>
+      <name>Java.net Repository for Glassfish</name>
+      <url>http://download.java.net/maven/glassfish</url>
+    </repository>
+
+    <!-- JSF Implementation Primefaces -->
+    <repository>
+      <id>prime-repo</id>
+      <name>Prime Technology Maven Repository</name>
+      <url>http://repository.prime.com.tr</url>
+      <layout>default</layout>
+    </repository>
+
+    <repository>
+      <id>EclipseLink Repo</id>
+      <name>Eclipse maven repository
+      http://eclipse.ialto.org/rt/eclipselink/maven.repo/</name>
+      <url>http://mirror.selfnet.de/eclipse/rt/eclipselink/maven.repo/</url>
+    </repository>
+    
+    <!-- Mirror repository, contains all dependencies -->
+    <repository>
+      <id>ingofischerNexus</id>
+      <url>http://ingofischer.de:8081/nexus/content/groups/public</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <!-- Scala -->
+    <pluginRepository>
+      <id>scala-tools.org</id>
+      <name>Scala-Tools Maven2 Repository</name>
+      <url>http://scala-tools.org/repo-releases</url>
+    </pluginRepository>
+
+    <!-- Glassfish  -->
+    <pluginRepository>
+      <id>maven.java.net</id>
+      <name>Java.net Maven2 Repository</name>
+      <url>http://download.java.net/maven/2</url>
+    </pluginRepository>
+
+    <!-- Glassfish -->
+    <pluginRepository>
+      <id>glassfish-repository</id>
+      <name>Java.net Repository for Glassfish</name>
+      <url>http://download.java.net/maven/glassfish</url>
+    </pluginRepository>
+    
+    <!-- Maven-Properties-Plugin -->
+    <pluginRepository>             
+      <id>sonatype-public</id>             
+      <url>http://repository.sonatype.org/content/groups/public/</url>             
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>true</enabled></snapshots>         
+    </pluginRepository> 
+  </pluginRepositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Import scope will provide versions for dependencies below. -->
+      <dependency>
+        <groupId>org.jboss.weld</groupId>
+        <artifactId>weld-extensions-bom</artifactId>
+        <version>${weld.extensions.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- Embedded Glassfish (Test only) -->
+    <dependency>
+      <groupId>org.glassfish.extras</groupId>
+      <artifactId>glassfish-embedded-all</artifactId>
+      <version>${glassfish.version}</version>
+      <scope>test</scope>
+    </dependency>
+  
+    <!--
+      JavaEE6-Spec (JSR 299 (CDI), JSR250 (Commons Annotations), JSR303 (Bean Validation) Old:
+      JavaEE6 (replaced by CDI 
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>${javaee-version}</version>
+      <scope>provided</scope>
+    </dependency>
+    --> 
+    
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4</version>
+      <scope>provided</scope>
+      <!-- <classifier>sources</classifier>  -->
+    </dependency>
+    
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>el-api</artifactId>
+      <version>2.2</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>el-impl</artifactId>
+      <version>2.2</version>
+    </dependency>
+     
+    <!-- CDI (JSR-299) -->
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- CDI Implementation Weld--> 
+    <dependency>
+      <groupId>org.jboss.weld</groupId>
+      <artifactId>weld-core</artifactId>
+      <version>1.0.1-Final</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- Source for javax.persistence  -->
+    <dependency>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.0-api</artifactId>
+      <version>1.0.0.Final</version>
+    </dependency>
+
+    <!-- JSR250 (Commons Annotations) -->
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- Servlet 3.0 Api Specification 
+    <dependency>
+       <groupId>org.jboss.spec.javax.servlet</groupId>
+       <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+       <version>1.0.0.Beta2</version>
+       <scope>provided</scope>
+    </dependency>
+  	-->
+  
+    <dependency>
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.servlet</artifactId>
+        <version>3.0</version>
+        <scope>provided</scope>
+    </dependency>
+
+
+    <!-- Bean Validation (JSR-303) -->
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!--  Glassfish EJB Sources -->
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.ejb</artifactId>
+      <version>${glassfish.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSF -->
+    <dependency>
+      <groupId>javax.faces</groupId>
+      <artifactId>jsf-api</artifactId>
+      <version>2.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSF -->
+    <dependency>
+      <groupId>javax.faces</groupId>
+      <artifactId>jsf-impl</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSF2 Component Library PrimeFaces -->
+    <dependency>
+      <groupId>org.primefaces</groupId>
+      <artifactId>primefaces</artifactId>
+      <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.faces</groupId>
+          <artifactId>jsf-impl</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- PrettyFaces (URL rewriting) 
+    <dependency> 
+      <groupId>com.ocpsoft</groupId>
+      <artifactId>prettyfaces-jsf2</artifactId> 
+      <version>3.0.1</version> 
+    </dependency>
+    -->
+    
+    <!-- Scala -->
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    
+    <!-- converting between Java and Scala collections  -->
+    <dependency>
+      <groupId>org.scalaj</groupId>
+      <artifactId>scalaj-collection_${scala.version}</artifactId>
+      <version>1.0</version>
+    </dependency>
+        
+
+    <!-- Specs (Behavior Driven Testing through JUnit)-->
+    <!-- TODO: Specs auf 2.8 Final -->
+    <dependency>
+      <groupId>org.scala-tools.testing</groupId>
+      <artifactId>specs_2.8.0</artifactId>
+      <version>1.6.5</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- JUnit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- HSQLDB Driver -->
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>${hsqldb.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!--  Hibernate -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-annotations</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate-validator.version}</version>
+    </dependency>
+    
+    <!-- MySQL JDBC Driver -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-connector.version}</version>
+    </dependency>
+
+    <!-- TestNG -->
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- SL4J API -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.6.0</version>
+    </dependency>
+
+    <!-- SL4J -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <version>1.6.0</version>
+    </dependency>
+
+    <!-- Injectable Weld-Logger (Remove when using Seam 3) --> 
+    <dependency>
+      <groupId>org.jboss.weld</groupId>
+      <artifactId>weld-logger</artifactId>
+      <version>1.0.0-CR2</version>
+    </dependency>
+    
+    <!-- Ant-Contrib for Special Ant Tasks  -->
+    <dependency>
+      <groupId>ant-contrib</groupId>
+      <artifactId>ant-contrib</artifactId>
+      <version>${ant-contrib.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>ant</groupId>
+          <artifactId>ant</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>ant</groupId>
+      <artifactId>ant-nodeps</artifactId>
+      <version>1.6.5</version>
+    </dependency>
+
+    <!-- Maven Ant Task for calling Maven from Ant -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-ant-tasks</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${artifactId}</finalName>
+    <plugins>
+      <!--================= MAVEN SCALA PLUGIN =================-->
+      <!-- Compile Scala, make mix with Java possible -->
+      <plugin>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+        <version>${maven.scala.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <phase>compile</phase>
+          </execution>
+          <execution>
+            <id>test-compile</id>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <phase>test-compile</phase>
+          </execution>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <scalaVersion>${scala.version}</scalaVersion>
+          <args>
+            <arg>-target:jvm-1.5</arg>
+            <!-- to support mix java/scala only -->
+            <arg>-make:transitivenocp</arg>
+            <arg>-dependencyfile</arg>
+            <arg>${project.build.directory}/.scala_dependencies</arg>
+          </args>
+        </configuration>
+      </plugin>
+
+      <!-- ================== MAVEN BUILD HELPER PLUGIN =================== -->
+      <!-- Add additional source folders to project for Eclipse -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/main/scala</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/test/scala</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Compiler plugin enforces Java 1.6 compatibility -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <debug>true</debug>
+        </configuration>
+      </plugin>
+
+      <!--================= MAVEN ECLIPSE PLUGIN =================-->
+      <!-- Add Scala nature, force download of source and JavaDoc jars -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <wtpversion>2.0</wtpversion>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>true</downloadJavadocs>
+          <buildcommands>
+            <buildcommand>ch.epfl.lamp.sdt.core.scalabuilder</buildcommand>
+          </buildcommands>
+          <additionalProjectnatures>
+            <projectnature>ch.epfl.lamp.sdt.core.scalanature</projectnature>
+          </additionalProjectnatures>
+          <classpathContainers>
+            <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+            <classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>
+          </classpathContainers>
+        </configuration>
+      </plugin>
+
+      <!--================= EMBEDDED GLASSFISH PLUGIN =================-->
+      <!-- For deployment on embedded server -->
+      <plugin>
+        <groupId>org.glassfish</groupId>
+        <artifactId>maven-embedded-glassfish-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <!-- 
+          <app>${project.build.directory}/${build.finalName}.war</app>
+           -->
+          <app>${project.build.directory}/${project.build.finalName}</app>
+          <port>7070</port>
+          <containerType>all</containerType>
+          <contextRoot>teachernews</contextRoot>
+          <configFile>${basedir}/embedded-glassfish/domain.xml</configFile>
+          <autoDelete>true</autoDelete>
+          <instanceRoot>${basedir}/embedded-glassfish/gfe-${maven.build.timestamp}</instanceRoot>
+          <!-- 
+          <instanceRoot>${project.build.directory}</instanceRoot>
+          <goalPrefix>glassfish</goalPrefix>
+          <app>target/test.war</app>
+           -->
+        </configuration>
+        <!-- 
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+        -->
+        <executions>
+           <execution>
+              <id>start-glassfish</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                 <goal>start</goal>
+              </goals>
+           </execution>
+           <execution>
+              <id>glassfish-deploy</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                 <goal>deploy</goal>
+              </goals>
+           </execution>
+           <execution>
+              <id>glassfish-undeploy</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                 <goal>undeploy</goal>
+              </goals>
+           </execution>
+           <execution>
+              <id>stop-glassfish</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                 <goal>stop</goal>
+              </goals>
+           </execution>
+        </executions> 
+        
+      </plugin>
+      
+      <!--================= JREBEL PLUGIN =================-->
+      <!-- Alternative classloader -->
+      <plugin>
+        <!--JRebel -->
+        <groupId>org.zeroturnaround</groupId>
+        <artifactId>javarebel-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-rebel-xml</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <!--================= GLASSFISH PLUGIN =================-->
+      <!-- Deploy app to glassfish  -->
+      <plugin>
+        <groupId>org.glassfish.maven.plugin</groupId>
+        <artifactId>maven-glassfish-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <glassfishDirectory>${glassfish.home}</glassfishDirectory>
+          <user>admin</user>
+          <passwordFile>.asadminpw</passwordFile>
+          <autoCreate>true</autoCreate>
+          <debug>true</debug>
+          <echo>true</echo>
+          <domain>
+		        <name>${project.artifactId}</name>
+            <adminPort>${domain.adminport}</adminPort>
+            <httpPort>${domain.httpport}</httpPort>
+            <httpsPort>${domain.httpsport}</httpsPort>
+            <iiopPort>${domain.iiopport}</iiopPort>
+            <jmsPort>${domain.jmsport}</jmsPort>
+          </domain>
+          <components>
+            <component>
+              <name>${project.artifactId}</name>
+              <!-- Deploy as single WAR: -->
+              <artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
+              <!-- Deploy as directory:
+              <artifact>${project.build.directory}/${project.build.finalName}</artifact>
+              -->
+            </component>
+          </components>
+        </configuration>
+      </plugin>
+
+      <!--================= MAVEN ANTRUN =================-->
+      <!-- Execute Ant tasks, if needed -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <configuration>
+              <tasks>
+                <property name="compile_classpath" refid="maven.compile.classpath" />
+                <property name="outputDir" value="${project.build.outputDirectory}" />
+                <property name="sourceDir" value="${project.build.sourceDirectory}" />
+                <property name="pomDir" value="${basedir}" />
+
+                <property name="profile" value="${profile}" />
+                <!-- Run Ant tasks if needed -->
+                <!-- <ant antfile="${basedir}/build.xml" target="annproc" />  -->
+                <echo>${project.build.directory}/${project.build.finalName}</echo>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <!--================= MAVEN PROPERTIES =================-->
+      <!-- Read properties for Maven build -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${basedir}/teachernews.properties</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>src/test/testng.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <!--================= REPORTING =================-->
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+        <version>${maven.scala.plugin.version}</version>
+        <configuration>
+          <scalaVersion>${scala.version}</scalaVersion>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+</project>

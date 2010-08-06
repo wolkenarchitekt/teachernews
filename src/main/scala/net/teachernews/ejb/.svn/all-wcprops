@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/private/!svn/ver/273/scala/TeacherNews_git2/src/main/scala/net/teachernews/ejb
+END
+UserEJB.scala
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/ejb/UserEJB.scala
+END
+MessageEJB.scala
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/ejb/MessageEJB.scala
+END
+SubscriptionEJB.scala
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/ejb/SubscriptionEJB.scala
+END
+EmailEJB.scala
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/ejb/EmailEJB.scala
+END

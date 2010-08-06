@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:p="http://primefaces.prime.com.tr/ui"
+   xmlns:f="http://java.sun.com/jsf/core">
+   <h:head>
+      <title>#{bundle['application.name']}</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <!-- Always reload the page -->
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+			<meta http-equiv="Pragma" content="no-cache" />
+			<meta http-equiv="Expires" content="0" />
+      <h:outputStylesheet name="css/screen.css"/>
+   </h:head>
+   <h:body>
+      <!-- <p:push channel="emailstatus" onpublish="handlePublish"/>   -->
+    
+      <div id="container">
+        <div id="header">
+            <h:outputLink action="/home.xhtml">
+              <h:graphicImage value="/resources/gfx/kopf_logo.gif" alt="Beuth-Hochschule"/>
+            </h:outputLink>
+            
+            <h:outputFormat value="#{bundle['user.loggedInAs']}" rendered="#{security.loggedIn}" id="loggedin">
+              <f:param value="#{security.user.firstName}"/>
+              <f:param value="#{security.user.name}"/>
+              <f:param value="#{bundle[security.user.role]}"/>
+            </h:outputFormat>
+            
+            <hr id="seperatorline"/>
+            <h:form>
+              
+              <!-- left navigation -->
+              <ul id="Navigation" class="navleft">
+                <h:commandLink action="/home?faces-redirect=true">
+                  <li>#{bundle['link.home']}</li>
+                </h:commandLink>
+
+                <h:commandLink action="/user/subscriptions?faces-redirect=true" rendered="#{security.loggedIn}">
+                  <li>#{bundle['link.subscriptions']}</li>
+                </h:commandLink>
+                
+                <h:commandLink action="/help?faces-redirect=true">
+                  <li>#{bundle['link.help']}</li>
+                </h:commandLink>
+                  
+                <h:commandLink action="/messages?faces-redirect=true"> 
+                  <li>#{bundle['message.messageList']}</li>
+                </h:commandLink>
+                
+                <h:commandLink action="/deanery/users?faces-redirect=true" 
+                  rendered="#{security.deanery}">
+                  <li>#{bundle['user.userlist']}</li>
+                </h:commandLink>
+              </ul>
+              
+              <!-- right navigation -->
+              <ul id="Navigation" class="navright">
+                <h:commandLink action="#{messageManager.startConversation}" 
+                  rendered="#{security.teacher}">
+                  <li>#{bundle['message.create']}</li>
+                </h:commandLink>
+              
+                <h:commandLink action="#{userManager.updateUser(security.user)}" rendered="#{security.loggedIn}">
+                  <li>#{bundle['link.edit.loggedinuser']}</li>
+                </h:commandLink>
+                
+                <h:commandLink action="/login?faces-redirect=true" rendered="#{!security.loggedIn}">
+                  <li>#{bundle['link.login']}</li>
+                </h:commandLink>
+                
+                <h:commandLink action="#{security.logout}" rendered="#{security.loggedIn}">
+                  <li>#{bundle['user.logout']}</li>
+                </h:commandLink>
+                
+                <h:commandLink action="/register?faces-redirect=true" rendered="#{!security.loggedIn}">
+                  <li>#{bundle['link.register']}</li>
+                </h:commandLink>
+                
+                <h:commandLink action="/forgotpw?faces-redirect=true" rendered="#{!security.loggedIn}">
+                  <li>#{bundle['link.forgotPassword']}</li>
+                </h:commandLink>
+              </ul>
+	        </h:form>
+        </div>
+         <div id="content">
+            <ui:insert name="content">
+               [Template content will be inserted here]
+            </ui:insert>
+            
+            <!-- Infos from Flash Scope -->
+            <p>
+              <h:outputText value="#{bundle[flash.info]}" rendered="#{! empty flash.info}" class="info"/>
+            </p>
+            
+            <!-- Exception messages from Flash Scope -->
+            <p:panel header="#{bundle['exception.failure']}" closable="true" id="errorPanel"
+              rendered="#{! empty flash.exceptionType}">
+              <p><h:outputFormat value="#{bundle[flash.exceptionType]}" class="error"/></p>
+              
+              <!-- Exception cause is only shown in development mode or for role teacher/deanery -->
+              <p>
+                <h:outputText value="#{flash.exceptionCause}" class="error"
+                    rendered="#{!empty flash.exceptionCause and ((security.deanery or security.teacher)
+                    or (facesContext.application.projectStage == 'Development'))}"/>
+              </p>
+            </p:panel>
+            
+            <!-- Global messages to show FacesMessages -->
+            <h:messages globalOnly="true" showDetail="true"/>         
+         </div>
+         <div id="footer">
+         </div>
+      </div>
+   </h:body>
+</html>

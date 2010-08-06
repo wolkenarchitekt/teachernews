@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/private/!svn/ver/273/scala/TeacherNews_git2/src/main/resources/META-INF
+END
+persistence.xml
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/private/!svn/ver/273/scala/TeacherNews_git2/src/main/resources/META-INF/persistence.xml
+END
+persistence-derby.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/private/!svn/ver/273/scala/TeacherNews_git2/src/main/resources/META-INF/persistence-derby.xml
+END
+persistence-mysql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/private/!svn/ver/273/scala/TeacherNews_git2/src/main/resources/META-INF/persistence-mysql.xml
+END
+persistence-embedded.xml
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/private/!svn/ver/273/scala/TeacherNews_git2/src/main/resources/META-INF/persistence-embedded.xml
+END

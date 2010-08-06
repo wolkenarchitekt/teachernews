@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/private/!svn/ver/273/scala/TeacherNews_git2/src/main/scala/net/teachernews/exceptions
+END
+ApplicationException.scala
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/exceptions/ApplicationException.scala
+END
+ExceptionHandlerFactory.scala
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/exceptions/ExceptionHandlerFactory.scala
+END

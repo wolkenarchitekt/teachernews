@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:p="http://primefaces.prime.com.tr/ui"
+  template="/WEB-INF/templates/default.xhtml">
+  <ui:define name="content">
+    <p><h:form id="users">
+      <p:dataTable var="_user" value="#{userManager.users}">
+        <p:column>
+          <f:facet name="header">
+            <h:outputText value="#{bundle['user.title']}" />
+          </f:facet>
+          <h:outputText value="#{bundle[_user.title]}" />
+        </p:column>
+        
+        <p:column>
+          <f:facet name="header">
+            <h:outputText value="#{bundle['user.name']}" />
+          </f:facet>
+          <h:outputText value="#{_user.name}" />
+        </p:column>
+        
+        <p:column>
+          <f:facet name="header">
+            <h:outputText value="#{bundle['user.firstName']}" />
+          </f:facet>
+          <h:outputText value="#{_user.firstName}" />
+        </p:column>
+        
+        <p:column>
+          <f:facet name="header">
+            <h:outputText value="#{bundle['user.email']}" />
+          </f:facet>
+          <h:outputText value="#{_user.email}" />
+        </p:column>
+        
+        <p:column>
+          <f:facet name="header">
+            <h:outputText value="#{bundle['user.role']}" />
+          </f:facet>
+          <h:outputText value="#{bundle[_user.role]}" />
+        </p:column>
+        
+        <p:column>
+          <h:commandButton action="#{userManager.updateUser(_user)}"
+            value="#{bundle['application.edit']}" />
+            &#160;
+            <h:commandButton id="remove"
+            action="#{userManager.removeUser(_user)}"
+            value="#{bundle['user.remove']}" />
+        </p:column>
+      </p:dataTable>
+    </h:form></p>
+  </ui:define>
+</ui:composition>

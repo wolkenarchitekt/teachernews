@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:p="http://primefaces.prime.com.tr/ui"
+  xmlns:h="http://java.sun.com/jsf/html"
+  template="/WEB-INF/templates/default.xhtml">
+  <ui:define name="content">
+    <f:metadata>
+      <f:param name="cid" value="" />
+    </f:metadata>
+    <h1>#{bundle['application.name']}</h1>
+    <p><h:outputText value="#{bundle['help.text1']}" /></p>
+    <p><h:outputText value="#{bundle['help.text2']}" class="bold" /><br />
+    <h:outputText value="#{bundle['help.text3']}" /></p>
+    <p><h:outputText value="#{bundle['help.text4']}" class="bold" /><br />
+    <h:outputText value="#{bundle['help.text5']}" /></p>
+    <p><h:outputText value="#{bundle['help.text6']}" class="bold" /><br />
+    <h:outputText value="#{bundle['help.text7']}" /></p>
+    <h:messages globalOnly="true"></h:messages>
+  </ui:define>
+</ui:composition>

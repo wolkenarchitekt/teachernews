@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/private/!svn/ver/273/scala/TeacherNews_git2/src/main/scala/net/teachernews/controller
+END
+MessageManager.scala
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/controller/MessageManager.scala
+END
+SubscriptionManager.scala
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/controller/SubscriptionManager.scala
+END
+UserManager.scala
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/private/!svn/ver/274/scala/TeacherNews_git2/src/main/scala/net/teachernews/controller/UserManager.scala
+END

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:p="http://primefaces.prime.com.tr/ui"
+  template="/WEB-INF/templates/default.xhtml">
+  <ui:define name="content">
+    <h:form id="loginForm">
+      <h2>#{bundle['user.login']}</h2>
+      
+      <h:panelGrid columns="3">
+        <h:outputLabel for="email" value="#{bundle['user.email']}:" />
+        <h:inputText id="email" value="#{security.user.email}"
+          validatorMessage="#{bundle['user.email.error']}">
+          <f:validateRequired />
+        </h:inputText>
+        <h:message for="email" errorClass="invalid" id="emailError" />
+
+        <h:outputLabel for="password"
+          value="#{bundle['user.password']}:" />
+        <h:inputSecret id="password" value="#{security.user.password}"
+          validatorMessage="#{bundle['user.password.error']}">
+          <f:validateRequired />
+        </h:inputSecret>
+        <h:message for="password" errorClass="invalid"
+          id="passwordError" />
+      </h:panelGrid>
+
+      <h:commandButton id="login" action="#{security.login}"
+        value="#{bundle['user.login']}" />
+      <h:commandButton id="forgotPW"
+        action="/forgotpw?faces-redirect=true"
+        value="#{bundle['link.forgotPassword']}" />
+
+      <p>
+      <!-- 
+        Check GET parameters to see if a Security Exception ocurred. See also /index.jsp, web.xml
+      -->
+      <!-- User tried to access site he has to be logged in for  -->
+      <h:outputText value="#{bundle['user.login.login']}"
+        rendered="#{param['login'] == 'login' and flash['exceptionType'] == null}"
+        class="error" /> 
+      
+      <!-- User tried to access site which needs higher role -->
+      <h:outputText value="#{bundle['user.login.error']}"
+        rendered="#{param['login'] == 'error' and flash['exceptionType'] == null}"
+        class="error" /></p>
+    </h:form>
+  </ui:define>
+</ui:composition>

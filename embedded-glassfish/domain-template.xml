@@ -1,0 +1,173 @@
+<!-- Domain.xml for use with Embedded Glassfish -->
+<domain log-root="${com.sun.aas.instanceRoot}/logs" application-root="${com.sun.aas.instanceRoot}/applications" version="10.0">
+  <system-applications />
+  <applications />
+  <resources>
+    <jdbc-resource pool-name="__TimerPool" jndi-name="jdbc/__TimerPool" object-type="system-admin" />
+    <jdbc-connection-pool name="__TimerPool" datasource-classname="org.apache.derby.jdbc.EmbeddedXADataSource" res-type="javax.sql.XADataSource">
+      <property value="${com.sun.aas.instanceRoot}/lib/databases/ejbtimer" name="databaseName" />
+      <property value=";create=true" name="connectionAttributes" />
+    </jdbc-connection-pool>
+    
+    <!-- Database settings -->
+    <jdbc-resource pool-name="TestPool" jndi-name="@auth.datasource-jndi.test@" />
+    <jdbc-connection-pool name="TestPool" is-isolation-level-guaranteed="false" 
+      datasource-classname="org.apache.derby.jdbc.EmbeddedXADataSource" res-type="javax.sql.XADataSource">
+      <property value="memory:test" name="DatabaseName"/>
+      <property value=";create=true" name="connectionAttributes" />
+    </jdbc-connection-pool>
+    
+    <!--  Custom Resources -->
+    <custom-resource res-type="java.util.Properties" description="Admin Settings for Teachernews" 
+      jndi-name="tnAdminProperties" factory-class="org.glassfish.resources.custom.factory.PropertiesFactory">
+      <property name="admin.firstName" value="@admin.firstName@" />
+      <property name="admin.password" value="@admin.password@" />
+      <property name="admin.title" value="@admin.title@" />
+      <property name="admin.name" value="@admin.name@" />
+      <property name="admin.email" value="@admin.email@" />
+    </custom-resource>
+    <mail-resource host="@mail.embedded.host@" jndi-name="mail/teachernews" 
+      transport-protocol="@mail.embedded.transportprotocol@" from="@mail.embedded.from.address@" user="@mail.embedded.user@">
+      <property name="mail.smtps.password" value="@mail.embedded.smtps.password@" />
+      <property name="mail.smtps.auth" value="@mail.embedded.smtps.auth@" />
+      <property name="mail.smtps.host" value="@mail.embedded.smtps.host@" />
+      <property name="mail.smtp.password" value="@mail.embedded.smtp.password@" />
+      <property name="mail.smtp.auth" value="@mail.embedded.smtp.auth@" />
+      <property name="mail.smtp.host" value="@mail.embedded.smtp.host@" />    
+      <property name="mail.from.address" value="@mail.from.address@" />
+      <property name="mail.from.name" value="@mail.from.name@" />
+      <property name="mail.smtp.starttls.enable" value="@mail.embedded.smtp.starttls.enable@" />
+    </mail-resource>
+  </resources>
+  <servers>
+    <server name="server" config-ref="server-config"> 
+      <resource-ref ref="jdbc/__TimerPool" />
+      <resource-ref ref="@auth.datasource-jndi.test@" />
+      <resource-ref ref="tnAdminProperties" />
+      <resource-ref ref="mail/teachernews" />
+    </server>
+  </servers>
+ <configs>
+   <config name="server-config">
+     <http-service>
+        <access-log rotation-interval-in-minutes="15" rotation-suffix="yyyy-MM-dd" />
+        <virtual-server id="server"></virtual-server>
+      </http-service>
+      <iiop-service>
+        <orb use-thread-pool-ids="thread-pool-1" />
+        <iiop-listener address="0.0.0.0" port="3700" id="orb-listener-1" />
+        <iiop-listener security-enabled="true" address="0.0.0.0" port="3820" id="SSL">
+          <ssl cert-nickname="s1as" />
+        </iiop-listener>
+        <iiop-listener security-enabled="true" address="0.0.0.0" port="3920" id="SSL_MUTUALAUTH">
+          <ssl cert-nickname="s1as" client-auth-enabled="true" />
+        </iiop-listener>
+      </iiop-service>
+      <admin-service type="das-and-server" system-jmx-connector-name="system">
+        <jmx-connector enabled="false" auth-realm-name="admin-realm" security-enabled="false" address="0.0.0.0" port="8686" name="system" />
+        <das-config autodeploy-enabled="false" dynamic-reload-enabled="true" deploy-xml-validation="full" autodeploy-dir="${com.sun.aas.instanceRoot}/autodeploy" />
+        <property value="/admin" name="adminConsoleContextRoot" />
+        <property value="${com.sun.aas.installRoot}/lib/install/applications/admingui.war" name="adminConsoleDownloadLocation" />
+        <property value="${com.sun.aas.installRoot}/.." name="ipsRoot" />
+      </admin-service>
+      <connector-service shutdown-timeout-in-seconds="30">
+      </connector-service>
+      <ejb-container steady-pool-size="0" max-pool-size="32" session-store="${com.sun.aas.instanceRoot}/session-store" pool-resize-quantity="8">
+        <ejb-timer-service />
+      </ejb-container>
+      <mdb-container steady-pool-size="0" max-pool-size="32" pool-resize-quantity="8" >
+      </mdb-container>
+      <jms-service type="EMBEDDED" default-jms-host="default_JMS_host">
+        <jms-host name="default_JMS_host" host="localhost" port="7676" admin-user-name="admin" admin-password="admin"/>
+      </jms-service>
+      <log-service file="${com.sun.aas.instanceRoot}/logs/server.log" log-rotation-limit-in-bytes="2000000">
+        <module-log-levels />
+      </log-service>
+      <security-service activate-default-principal-to-role-mapping="true" jacc="simple">
+        <auth-realm classname="com.sun.enterprise.security.auth.realm.file.FileRealm" name="admin-realm">
+    <property value="${com.sun.aas.instanceRoot}/config/admin-keyfile" name="file" />
+          <property value="fileRealm" name="jaas-context" />
+        </auth-realm>
+        <auth-realm classname="com.sun.enterprise.security.auth.realm.file.FileRealm" name="file">
+    <property value="${com.sun.aas.instanceRoot}/config/keyfile" name="file" />
+          <property value="fileRealm" name="jaas-context" />
+        </auth-realm>
+        <auth-realm classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm" name="certificate" />
+        <auth-realm name="jdbc" classname="com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm">
+          <property name="jaas-context" value="@auth.jaas-context@" />
+          <property name="password-column" value="@auth.passwordcolumn@" />
+          <property name="assign-groups" value="@auth.assigngroups@" />
+          <property name="datasource-jndi" value="@auth.datasource-jndi.test@" />
+          <property name="group-table" value="@auth.grouptable@" />
+          <property name="user-table" value="@auth.usertable@" />
+          <property name="group-name-column" value="@auth.groupnamecolumn@" />
+          <property name="digest-algorithm" value="@auth.digest@" />
+          <property name="user-name-column" value="@auth.usernamecolumn@" />
+        </auth-realm>
+        <jacc-provider policy-configuration-factory-provider="com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl" policy-provider="com.sun.enterprise.security.provider.PolicyWrapper" name="default">
+          <property value="${com.sun.aas.instanceRoot}/generated/policy" name="repository" />
+        </jacc-provider>
+        <jacc-provider policy-configuration-factory-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory" policy-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyProvider" name="simple" />
+        <audit-module classname="com.sun.enterprise.security.Audit" name="default">
+          <property value="false" name="auditOn" />
+        </audit-module>
+        <message-security-config auth-layer="SOAP">
+          <provider-config provider-id="XWS_ClientProvider" class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-type="client">
+            <request-policy auth-source="content" />
+            <response-policy auth-source="content" />
+            <property value="s1as" name="encryption.key.alias" />
+            <property value="s1as" name="signature.key.alias" />
+            <property value="false" name="dynamic.username.password" />
+            <property value="false" name="debug" />
+          </provider-config>
+          <provider-config provider-id="ClientProvider" class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-type="client">
+            <request-policy auth-source="content" />
+            <response-policy auth-source="content" />
+            <property value="s1as" name="encryption.key.alias" />
+            <property value="s1as" name="signature.key.alias" />
+            <property value="false" name="dynamic.username.password" />
+            <property value="false" name="debug" />
+            <property value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml" name="security.config" />
+          </provider-config>
+          <provider-config provider-id="XWS_ServerProvider" class-name="com.sun.xml.wss.provider.ServerSecurityAuthModule" provider-type="server">
+            <request-policy auth-source="content" />
+            <response-policy auth-source="content" />
+            <property value="s1as" name="encryption.key.alias" />
+            <property value="s1as" name="signature.key.alias" />
+            <property value="false" name="debug" />
+          </provider-config>
+          <provider-config provider-id="ServerProvider" class-name="com.sun.xml.wss.provider.ServerSecurityAuthModule" provider-type="server">
+            <request-policy auth-source="content" />
+            <response-policy auth-source="content" />
+            <property value="s1as" name="encryption.key.alias" />
+            <property value="s1as" name="signature.key.alias" />
+            <property value="false" name="debug" />
+            <property value="${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml" name="security.config" />
+          </provider-config>
+        </message-security-config>
+      </security-service>
+      <monitoring-service>
+        <module-monitoring-levels />
+      </monitoring-service>      
+      <transaction-service tx-log-dir="${com.sun.aas.instanceRoot}/logs" >
+      </transaction-service>
+      <network-config>
+        <protocols name="http-listener-1">
+          <http default-virtual-server="server" max-connections="250" server-name="" comet-support-enabled="@domain.cometsupport@">
+            <file-cache enabled="false" />
+          </http>
+        </protocols>
+        <network-listeners>
+        </network-listeners>
+        <transports>
+          <transport name="tcp"></transport>
+        </transports>
+      </network-config>       
+      <thread-pools>
+          <thread-pool name="http-thread-pool" max-queue-size="4096"></thread-pool>
+          <thread-pool name="thread-pool-1" max-thread-pool-size="200"/>
+      </thread-pools>
+    </config> 
+  </configs>
+  <property name="administrative.domain.name" value="domain1"/>
+</domain>

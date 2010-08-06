@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:p="http://primefaces.prime.com.tr/ui"
+  xmlns:h="http://java.sun.com/jsf/html"
+  template="/WEB-INF/templates/default.xhtml">
+  <ui:define name="content">
+    <h1>#{bundle['application.name']}</h1>
+    <p><h:outputText value="#{bundle['application.welcome']}" /></p>
+    <h:form>
+      <h:commandLink rendered="#{!security.loggedIn}"
+        value="#{bundle['user.pleaseLogin']}"
+        action="login?faces-redirect=true" />
+        
+      <h:commandLink action="/messages?faces-redirect=true&amp;mine=true" rendered="#{security.loggedIn}"> 
+        #{bundle['message.subMessageList']}
+      </h:commandLink>
+    </h:form>
+  </ui:define>
+</ui:composition>

@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+<project name="teachernews" basedir="." default="main" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+  
+  <!-- 
+    This script configures Glassfish/Embedded Glassfish to run Teachernews. 
+    It MUST be run at least once before deploying Teachernews. 
+  -->
+  
+	<property environment="env" />
+	<property file="teachernews.properties" prefix="conf" />
+	
+	<filter filtersfile="${basedir}/teachernews.properties"/>
+  
+  <target name="main">
+    <antcall target="maven-env-check"/>
+    <antcall target="downloadlibs"/>
+    <antcall target="configure-embedded-glassfish"/>
+    <antcall target="configure-installed-glassfish"/>
+  </target>
+  
+  <!-- 1. Check that Maven is installed and M2_HOME/M2_REPO is set -->
+  <target name="maven-env-check">
+    <!-- Check environment variables -->
+    <echo>${env.M2_HOME}</echo>
+    <fail unless="env.M2_HOME">M2_HOME not set.</fail>
+    <fail unless="env.M2_REPO">M2_REPO not set.</fail>
+    
+    <!-- Check if needed Ant libraries are available -->
+    <condition property="libs-available">
+      <and>
+        <available file="${env.M2_REPO}/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"/>
+        <available file="${env.M2_REPO}/org/apache/maven/maven-ant-tasks/2.1.0/maven-ant-tasks-2.1.0.jar"/>
+      </and>
+    </condition>
+  </target>
+
+  <!-- 2. Download needed Ant libs through Maven if not available -->
+  <target name="downloadlibs" depends="maven-env-check" unless="libs-available">
+    <exec executable="mvn" failonerror="true" vmlauncher="false">
+      <arg line="org.apache.maven.plugins:maven-dependency-plugin:2.1:get -DrepoUrl=http://download.java.net/maven/2 -Dartifact=ant-contrib:ant-contrib:1.0b3" />
+    </exec>
+    <exec executable="mvn" failonerror="true" vmlauncher="false">
+      <arg line="org.apache.maven.plugins:maven-dependency-plugin:2.1:get -DrepoUrl=http://download.java.net/maven/2 -Dartifact=org.apache.maven:maven-ant-tasks:2.1.0" />
+    </exec>
+  </target>
+    
+  <!-- 3. Set Maven Ant Task and Ant-Contrib source paths -->
+  <target name="definetasks" depends="maven-env-check">
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" 
+      classpath="${env.M2_REPO}/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar" />
+    <taskdef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" 
+      classpath="${env.M2_REPO}/org/apache/maven/maven-ant-tasks/2.1.0/maven-ant-tasks-2.1.0.jar" />
+  </target>
+  
+  <!-- 4. Check for Glassfish -->
+  <target name="check-glassfish" depends="definetasks">
+    <condition property="use-embedded">
+      <equals arg1="${conf.glassfish.embedded}" arg2="true" />
+    </condition>
+  </target>
+  
+  <!-- 4.1 Use Embedded Glassfish -->
+  <target name="configure-embedded-glassfish" depends="check-glassfish" if="use-embedded">
+    <echo>Configuring Embedded Glassfish</echo>
+    <!-- Use persistence.xml with in-memory-DB -->
+    <copy file="src/main/resources/META-INF/persistence-embedded.xml"
+      tofile="src/main/resources/META-INF/persistence.xml"  
+      filtering="true" overwrite="true"/>
+     
+    <!-- Filter domain-template.xml with properties into domain.xml -->
+    <copy file="${basedir}/embedded-glassfish/domain-template.xml"
+     tofile="${basedir}/embedded-glassfish/domain.xml" 
+     filtering="true" overwrite="true"/>
+
+    <echo message="Embedded Glassfish configured. To run, type"/>
+    <echo message="   mvn package embedded-glassfish:run"/>
+  </target>
+  
+  <!-- 4.2 Use Installed Glassfish -->
+  <target name="configure-installed-glassfish" depends="check-glassfish" unless="use-embedded">
+    <echo>Configuring Glassfish</echo>
+    <if>
+      <not>
+        <isset property="env.GLASSFISH"/>
+      </not>
+      <then>
+        <fail>Could not detect Glassfish environment variable. Using Embedded Glassfish.</fail>
+      </then>
+    </if>
+    
+    <!-- On Windows, rename asadmin to asadmin.sh to avoid conflicts -->
+    <condition property="isWindows">
+      <os family="windows" />
+    </condition>
+    <if>
+      <isset property="isWindows" />
+      <then>
+        <if>
+          <available file="${env.GLASSFISH}/bin/asadmin" />
+          <then>
+            <echo>Moving asadmin to asadmin.sh to avoid conflicts</echo>
+            <move file="${env.GLASSFISH}/bin/asadmin" tofile="${env.GLASSFISH}/bin/asadmin.sh" />
+          </then>
+        </if>
+      </then>
+    </if>
+    
+    <!-- Start embedded DerbyDB, included in Glassfish  -->
+    <if>
+      <not><isset property="conf.mysql"/></not>
+      <then>
+        <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+          <arg line="start-database" />
+        </exec>
+      </then>
+    </if>
+    
+    <!-- Create domain -->
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="--user ${conf.domain.user}" />
+      <arg line="create-domain" />
+      <arg line="--adminport ${conf.domain.adminport}" />
+      <arg line="--savemasterpassword" />
+      <arg line="--instanceport ${conf.domain.httpport}" />
+      <arg line="${conf.domain.name}" />
+    </exec>
+
+    <!-- Start Domain  -->
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+      <arg line="start-domain ${conf.domain.name}" />
+    </exec>
+
+    <if>
+      <isset property="conf.mysql" />
+      <then>
+        <echo>Using MySQL Database</echo>
+        
+        <!-- Copy driver to Glassfish-libs -->
+        <copy file="${env.M2_REPO}/mysql/mysql-connector-java/5.1.12/mysql-connector-java-5.1.12.jar" 
+          todir="${env.GLASSFISH}/lib" overwrite="true" />
+        
+        <!-- Use MySQL persistence.xml -->
+        <copy file="src/main/resources/META-INF/persistence-mysql.xml" 
+          tofile="src/main/resources/META-INF/persistence.xml" 
+          overwrite="true" filtering="true"/>
+
+        <!-- Configure Database (default:Derby, embedded in Glassfish) -->
+        <!-- Remove existing jdbc-connection-pool and jdbc-resource to update settings -->
+        <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+          <arg line="--passwordfile ${conf.domain.passwordfile}" />
+          <arg line="delete-jdbc-connection-pool" />
+          <arg line="--cascade=true" />
+          <arg line="${conf.mysqldb.poolname}" />
+        </exec>
+        <!-- Add connection pool -->
+        <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+          <arg line="--passwordfile ${conf.domain.passwordfile}" />
+          <arg line="create-jdbc-connection-pool" />
+          <arg line="--datasourceclassname=com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource" />
+          <arg line="--restype=javax.sql.DataSource" />
+          <arg line="--nontransactionalconnections=false" />
+          <arg line="--allownoncomponentcallers=true" />
+          <arg line="--property user=${conf.mysqldb.user}:password=${conf.mysqldb.password}:port=${conf.mysqldb.port}:serverName=${conf.mysqldb.server}:databaseName=${conf.mysqldb.name}" />
+          <arg line="${conf.mysqldb.poolname}" />
+        </exec>
+        <!-- Add JNDI connector -->
+        <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+          <arg line="--passwordfile ${conf.domain.passwordfile}" />
+          <arg line="create-jdbc-resource" />
+          <arg line="--enabled=true" />
+          <arg line="--connectionpoolid=${conf.mysqldb.poolname}" />
+          <arg line="${conf.mysqldb.jndiname}" />
+        </exec>
+      </then>
+      <else>
+        <echo>Using Derby Database</echo>
+        
+        <!-- Use Derby persistence.xml -->
+        <copy file="src/main/resources/META-INF/persistence-derby.xml" 
+          tofile="src/main/resources/META-INF/persistence.xml" 
+          overwrite="true" filtering="true"/>
+          
+        <!-- Configure Database (default:Derby, embedded in Glassfish) -->
+        <!-- Remove existing jdbc-connection-pool and jdbc-resource to update settings -->
+        <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+          <arg line="--passwordfile ${conf.domain.passwordfile}" />
+          <arg line="delete-jdbc-connection-pool" />
+          <arg line="--cascade=true" />
+          <arg line="${conf.derbydb.poolname}" />
+        </exec>
+        <!-- Add connection pool -->
+        <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+          <arg line="--passwordfile ${conf.domain.passwordfile}" />
+          <arg line="create-jdbc-connection-pool" />
+          <arg line="--datasourceclassname=org.apache.derby.jdbc.ClientDataSource" />
+          <arg line="--restype=javax.sql.DataSource" />
+          <arg line="--isisolationguaranteed=false" />
+          <arg line="--property user=${conf.derbydb.user}:password=${conf.derbydb.password}:port=${conf.derbydb.port}:serverName=${conf.derbydb.server}:databaseName=${conf.derbydb.name}:connectionAttributes=${conf.derbydb.attributes}" />
+          <arg line="${conf.derbydb.poolname}" />
+        </exec>
+        <!-- Add JNDI connector -->
+        <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+          <arg line="--passwordfile ${conf.domain.passwordfile}" />
+          <arg line="create-jdbc-resource" />
+          <arg line="--enabled=true" />
+          <arg line="--connectionpoolid=${conf.derbydb.poolname}" />
+          <arg line="${conf.derbydb.jndiname}" />
+        </exec>
+      </else>
+    </if>
+    
+    <!-- Setup JDBC authentication realm -->
+    <!-- Remove existing authentication realm to update settings -->
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="delete-auth-realm" />
+      <arg line="${conf.auth.realmname}" />
+    </exec>
+    <!-- Remove file realm to set jdbc as default realm -->
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="delete-auth-realm" />
+      <arg line="file" />
+    </exec>
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="create-auth-realm" />
+      <arg line="--classname com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm" />
+      <arg line="--property jaas-context=${conf.auth.jaas-context}:datasource-jndi=${conf.auth.datasource-jndi}:user-table=${conf.auth.usertable}:user-name-column=${conf.auth.usernamecolumn}:password-column=${conf.auth.passwordcolumn}:group-table=${conf.auth.grouptable}:group-name-column=${conf.auth.groupnamecolumn}:assign-groups=${conf.auth.assigngroups}:digest-algorithm=${conf.auth.digest}" />
+      <arg line="${conf.auth.realmname}" />
+    </exec>
+
+    <!-- Add default admin user -->
+    <!-- Remove existing admin user custom resource to update settings -->
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="delete-custom-resource" />
+      <arg line="tnAdminProperties" />
+    </exec>
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="create-custom-resource" />
+      <arg line="--restype java.util.Properties" />
+      <arg line="--factoryclass org.glassfish.resources.custom.factory.PropertiesFactory" />
+      <arg line='--description "Admin Settings for Teachernews"' />
+      <arg line="--property admin.password=${conf.admin.password}:admin.email=${conf.admin.email}:admin.title=${conf.admin.title}:admin.firstName=${conf.admin.firstName}:admin.name=${conf.admin.name}" />
+      <arg line="tnAdminProperties" />
+    </exec>
+
+    <!-- E-Mail Settings -->
+    <!-- Remove existing mail settings custom resource to update settings -->
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="delete-javamail-resource" />
+      <arg line="mail/teachernews" />
+    </exec>
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="create-javamail-resource" />
+      <arg line="--mailhost ${conf.mail.host}" />
+      <arg line="--mailuser ${conf.mail.user}" />
+      <arg line="--transprotocol=${conf.mail.transportprotocol}" />
+      <arg line="--fromaddress ${conf.mail.fromaddress}" />
+      <arg line="--debug=${conf.mail.debug}" />
+      <arg line="--property mail.smtps.host=${conf.mail.host}:mail.smtps.auth=${conf.mail.smtps.auth}:mail.smtps.password=${conf.mail.password}:mail.from.address=${conf.mail.from.address}:mail.from.name=${conf.mail.from.name}" />
+      <arg line="mail/teachernews" />
+    </exec>
+
+    <!-- Use alternative JRebel Classloader, if available -->
+    <if>
+      <isset property="env.JREBEL" />
+      <then>
+        <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+          <arg line="--passwordfile ${conf.domain.passwordfile}" />
+          <arg line="create-jvm-options" />
+          <arg line="-javaagent\:C\:\\dev\\JRebel\\jrebel.jar:-noverify" />
+        </exec>
+      </then>
+    </if>
+
+    <!-- Add Comet Support, if set  -->
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="true" vmlauncher="false">
+      <arg line="--passwordfile ${conf.domain.passwordfile}" />
+      <arg line="set server-config.network-config.protocols.protocol.http-listener-1.http.comet-support-enabled=${conf.domain.cometsupport}" />
+    </exec>
+
+    <!-- Stop Domain  -->
+    <exec executable="${env.GLASSFISH}/bin/asadmin" failonerror="false" vmlauncher="false">
+      <arg line="stop-domain ${conf.domain.name}" />
+    </exec>
+    
+    <echo></echo>
+    <echo>Glassfish was successfully configured. To run, type</echo>
+    <echo>  mvn package glassfish:deploy</echo>
+    <echo></echo>
+    <echo>If the application is already deployed, and you want do redeploy:</echo>
+    <echo>  mvn package [glassfish:start-domain] glassfish:redeploy</echo>
+  </target>
+</project>
