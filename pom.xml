@@ -7,7 +7,7 @@
   <name>teachernews</name>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <scala.version>2.8.0</scala.version>
@@ -107,6 +107,13 @@
       <url>http://mirror.selfnet.de/eclipse/rt/eclipselink/maven.repo/</url>
     </repository>
     
+    <!-- Contains all dependencies -->
+    <repository>
+      <id>ingofischerNexus</id>
+      <url>http://ingofischer.de:8081/nexus/content/groups/public</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>true</enabled></snapshots>         
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -115,6 +122,13 @@
       <id>scala-tools.org</id>
       <name>Scala-Tools Maven2 Repository</name>
       <url>http://scala-tools.org/repo-releases</url>
+    </pluginRepository>
+    
+    <!-- Latest Maven Scala Plugin -->
+    <pluginRepository>
+      <id>scala-tools.org</id>
+      <name>Scala-Tools Maven2 Repository</name>
+      <url>http://scala-tools.org/repo-snapshots</url>
     </pluginRepository>
 
     <!-- Glassfish  -->
@@ -154,17 +168,10 @@
   </dependencyManagement>
 
   <dependencies>
-    <!-- Embedded Glassfish (Test only) -->
-    <dependency>
-      <groupId>org.glassfish.extras</groupId>
-      <artifactId>glassfish-embedded-all</artifactId>
-      <version>${glassfish.version}</version>
-      <scope>test</scope>
-    </dependency>
-  
+    <!-- ====================== Java Enterprise 6 API dependencies ====================== -->
     <!--
-      JavaEE6-Spec (JSR 299 (CDI), JSR250 (Commons Annotations), JSR303 (Bean Validation) Old:
-      JavaEE6 (replaced by CDI 
+      Contains complete JavaEE6-Spec (JSR 299 (CDI), JSR250 (Commons Annotations), JSR303 (Bean Validation).
+      Contains no sources -> commented out. Each API is imported as a single dependency to get sources.
     <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
@@ -172,78 +179,52 @@
       <scope>provided</scope>
     </dependency>
     --> 
-    
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4</version>
-      <scope>provided</scope>
-      <!-- <classifier>sources</classifier>  -->
-    </dependency>
-    
-    <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>el-api</artifactId>
-      <version>2.2</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.glassfish.web</groupId>
-      <artifactId>el-impl</artifactId>
-      <version>2.2</version>
-    </dependency>
-     
     <!-- CDI (JSR-299) -->
     <dependency>
       <groupId>javax.enterprise</groupId>
       <artifactId>cdi-api</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <!-- CDI Implementation Weld--> 
-    <dependency>
-      <groupId>org.jboss.weld</groupId>
-      <artifactId>weld-core</artifactId>
-      <version>1.0.1-Final</version>
-      <scope>provided</scope>
+      <version>1.0-SP1</version>
     </dependency>
     
-    <!-- Source for javax.persistence  -->
-    <dependency>
-      <groupId>org.hibernate.javax.persistence</groupId>
-      <artifactId>hibernate-jpa-2.0-api</artifactId>
-      <version>1.0.0.Final</version>
-    </dependency>
-
     <!-- JSR250 (Commons Annotations) -->
     <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>jsr250-api</artifactId>
       <scope>provided</scope>
+      <version>1.0</version>
     </dependency>
     
-    <!-- Servlet 3.0 Api Specification 
+    <!-- Expression Language -->
     <dependency>
-       <groupId>org.jboss.spec.javax.servlet</groupId>
-       <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-       <version>1.0.0.Beta2</version>
-       <scope>provided</scope>
+      <groupId>javax.el</groupId>
+      <artifactId>el-api</artifactId>
+      <scope>provided</scope>
+      <version>2.2</version>
     </dependency>
-    -->
-  
+    
+    <!-- JavaMail -->
     <dependency>
-        <groupId>org.glassfish</groupId>
-        <artifactId>javax.servlet</artifactId>
-        <version>3.0</version>
-        <scope>provided</scope>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <scope>provided</scope>
+      <version>1.4</version>
     </dependency>
-
+    
+    <!-- Servlet 3.0 API (JSF-315) -->
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.servlet</artifactId>
+      <version>3.0</version>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- Bean Validation (JSR-303) -->
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
       <scope>provided</scope>
+      <version>1.0.0.GA</version>
     </dependency>
 
     <!--  Glassfish EJB Sources -->
@@ -258,79 +239,41 @@
     <dependency>
       <groupId>javax.faces</groupId>
       <artifactId>jsf-api</artifactId>
-      <version>2.0</version>
+      <version>2.0.2-FCS</version>
       <scope>provided</scope>
     </dependency>
-
+    
     <!-- JSF -->
     <dependency>
       <groupId>javax.faces</groupId>
       <artifactId>jsf-impl</artifactId>
+      <version>2.0.2-FCS</version>
       <scope>provided</scope>
     </dependency>
 
-    <!-- JSF2 Component Library PrimeFaces -->
+    <!-- ====================== Java Enterprise 6 implementation dependencies ====================== -->
+
+    <!-- CDI Implementation Weld--> 
     <dependency>
-      <groupId>org.primefaces</groupId>
-      <artifactId>primefaces</artifactId>
-      <version>2.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.faces</groupId>
-          <artifactId>jsf-impl</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.jboss.weld</groupId>
+      <artifactId>weld-core</artifactId>
+      <version>1.0.1-Final</version>
+      <scope>provided</scope>
     </dependency>
 
-    <!-- PrettyFaces (URL rewriting) 
-    <dependency> 
-      <groupId>com.ocpsoft</groupId>
-      <artifactId>prettyfaces-jsf2</artifactId> 
-      <version>3.0.1</version> 
-    </dependency>
-    -->
-    
-    <!-- Scala -->
+    <!-- Expression Language Glassfish implementation -->
     <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>${scala.version}</version>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>el-impl</artifactId>
+      <version>2.2</version>
     </dependency>
     
-    <!-- converting between Java and Scala collections  -->
+    <!-- Hibernate JPA2 implementation  -->
     <dependency>
-      <groupId>org.scalaj</groupId>
-      <artifactId>scalaj-collection_${scala.version}</artifactId>
-      <version>1.0</version>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.0-api</artifactId>
+      <version>1.0.0.Final</version>
     </dependency>
-        
-
-    <!-- Specs (Behavior Driven Testing through JUnit)-->
-    <!-- TODO: Specs auf 2.8 Final -->
-    <dependency>
-      <groupId>org.scala-tools.testing</groupId>
-      <artifactId>specs_2.8.0</artifactId>
-      <version>1.6.5</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- JUnit -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <!-- HSQLDB Driver -->
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>${hsqldb.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!--  Hibernate -->
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
@@ -352,21 +295,15 @@
       <version>${hibernate-validator.version}</version>
     </dependency>
     
-    <!-- MySQL JDBC Driver -->
+    <!-- ====================== Scala dependencies ====================== -->
+    <!-- Scala language/library -->
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>${mysql-connector.version}</version>
-    </dependency>
-
-    <!-- TestNG -->
-    <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>${testng.version}</version>
-      <scope>test</scope>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
     </dependency>
     
+    <!-- ====================== Logging dependencies ====================== -->
     <!-- SL4J API -->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -388,6 +325,45 @@
       <version>1.0.0-CR2</version>
     </dependency>
     
+    <!-- ====================== Test dependencies ====================== -->
+    <!-- Embedded Glassfish (Test only) -->
+    <dependency>
+      <groupId>org.glassfish.extras</groupId>
+      <artifactId>glassfish-embedded-all</artifactId>
+      <version>${glassfish.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- HSQLDB Driver -->
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>${hsqldb.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- TestNG -->
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- ====================== Additional dependencies ====================== -->
+    <!-- JSF2 Component Library PrimeFaces -->
+    <dependency>
+      <groupId>org.primefaces</groupId>
+      <artifactId>primefaces</artifactId>
+      <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.faces</groupId>
+          <artifactId>jsf-impl</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
     <!-- Ant-Contrib for Special Ant Tasks  -->
     <dependency>
       <groupId>ant-contrib</groupId>
@@ -412,7 +388,14 @@
       <artifactId>maven-ant-tasks</artifactId>
       <version>2.1.0</version>
     </dependency>
-  </dependencies>
+
+    <!-- MySQL JDBC Driver -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-connector.version}</version>
+    </dependency>
+  </dependencies>  
 
   <build>
     <finalName>${artifactId}</finalName>
@@ -426,19 +409,20 @@
         <executions>
           <execution>
             <id>compile</id>
+            <phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>
-            <phase>compile</phase>
           </execution>
           <execution>
             <id>test-compile</id>
+            <phase>test-compile</phase>
             <goals>
               <goal>testCompile</goal>
             </goals>
-            <phase>test-compile</phase>
           </execution>
           <execution>
+            <id>process-resources</id>
             <phase>process-resources</phase>
             <goals>
               <goal>compile</goal>
@@ -446,9 +430,9 @@
           </execution>
         </executions>
         <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
           <args>
             <arg>-target:jvm-1.5</arg>
+            <!-- to support mix java/scala only -->
             <arg>-make:transitivenocp</arg>
             <arg>-dependencyfile</arg>
             <arg>${project.build.directory}/.scala_dependencies</arg>
@@ -631,11 +615,11 @@
           <components>
             <component>
               <name>${project.artifactId}</name>
-              <!-- Deploy as single WAR: -->
+              <!-- Deploy as single WAR:
               <artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
-              <!-- Deploy as directory:
+               -->
+              <!-- Deploy as directory: -->
               <artifact>${project.build.directory}/${project.build.finalName}</artifact>
-              -->
             </component>
           </components>
         </configuration>
@@ -656,9 +640,12 @@
                 <property name="pomDir" value="${basedir}" />
 
                 <property name="profile" value="${profile}" />
-                <!-- Run Ant tasks if needed -->
-                <!-- <ant antfile="${basedir}/build.xml" target="annproc" />  -->
-                <echo>${project.build.directory}/${project.build.finalName}</echo>
+                <!-- Run Ant tasks if needed
+                <ant antfile="${basedir}/build.xml" target="show-maven-classpath" />
+                 --> 
+                <!-- Show complete Maven-classpath 
+                <echo>Maven-Classpath:${compile_classpath}</echo>
+                -->
               </tasks>
             </configuration>
             <goals>
@@ -689,6 +676,8 @@
         </executions>
       </plugin>
 
+      <!--================= SUREFIRE =================-->
+      <!-- Configure Tests (JUnit/TestNG) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -711,10 +700,16 @@
         <artifactId>maven-scala-plugin</artifactId>
         <version>${maven.scala.plugin.version}</version>
         <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
+          <args>
+            <arg>-target:jvm-1.5</arg>
+            <!-- to support mix java/scala only -->
+            <arg>-make:transitivenocp</arg>
+            <arg>-dependencyfile</arg>
+            <arg>${project.build.directory}/.scala_dependencies</arg>
+          </args>
         </configuration>
       </plugin>
-      
+        
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
