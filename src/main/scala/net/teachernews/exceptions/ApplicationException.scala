@@ -15,8 +15,8 @@ import scala.reflect.BeanProperty
  * @version 1.0
  */
 @javax.ejb.ApplicationException
-class ApplicationException(var message:ExceptionType.Value, val cause: Throwable=null)
-    extends RuntimeException(message.toString, cause) 
+class ApplicationException(var message: ExceptionType.Value, val cause: Throwable = null)
+  extends RuntimeException(message.toString, cause)
 
 /**
  * ExceptionType Enumeration for use with ApplicationException.

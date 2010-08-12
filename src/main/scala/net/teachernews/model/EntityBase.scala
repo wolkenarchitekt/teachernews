@@ -1,6 +1,6 @@
 package net.teachernews.model
 
-import javax.persistence.{MappedSuperclass, Version}
+import javax.persistence.{ MappedSuperclass, Version }
 
 /**
  * Superclass for common Entity attributes
@@ -12,7 +12,7 @@ import javax.persistence.{MappedSuperclass, Version}
 abstract class EntityBase {
   @Version
   var version: Long = _
-  
+
   /**
    * In Hibernate, When ID is inherited from superclass, MetaModel doesn't recognize the
    * ID from superclass. See: http://opensource.atlassian.com/projects/hibernate/browse/HHH-5024
@@ -23,6 +23,6 @@ abstract class EntityBase {
    * @Id @GeneratedValue @BeanProperty
    * protected var id: Long = _
    */
-  
-  def equals(other:Any):Boolean
+
+  def equals(other: Any): Boolean
 }

@@ -4,16 +4,16 @@ import javax.ejb.EJB
 import javax.enterprise.context.SessionScoped
 import javax.inject.Inject
 import javax.inject.Named
-import javax.faces.context.{FacesContext, Flash}
-import javax.servlet.http.{HttpSession, HttpServletRequest}
+import javax.faces.context.{ FacesContext, Flash }
+import javax.servlet.http.{ HttpSession, HttpServletRequest }
 
 import org.slf4j.Logger
 
-import scala.reflect.{BooleanBeanProperty,BeanProperty}
+import scala.reflect.{ BooleanBeanProperty, BeanProperty }
 
 import net.teachernews.ejb.UserEJB
-import net.teachernews.exceptions.{ApplicationException, ExceptionType}
-import net.teachernews.model.{RoleType, User, User_}
+import net.teachernews.exceptions.{ ApplicationException, ExceptionType }
+import net.teachernews.model.{ RoleType, User, User_ }
 import net.teachernews.services.Constants.REDIRECT
 import net.teachernews.services.Application.md5hash
 
@@ -25,26 +25,31 @@ import net.teachernews.services.Application.md5hash
  * @version 1.0
  */
 @SessionScoped
-@Named @serializable
+@Named
+@serializable
 class Security {
-  @EJB                  var userEJB:UserEJB = _
+  @EJB var userEJB: UserEJB = _
+  
+  @Inject var facesContext: FacesContext = _
+  @Inject var session: HttpSession = _
 
-  @BeanProperty         var user:User = new User
-  @BooleanBeanProperty   var loggedIn = false
-  @Inject @transient    var log:Logger = _
+  @Inject @transient var log: Logger = _
+  @Inject @transient var flash: Flash = _
+  @Inject @transient var request: HttpServletRequest = _
   
-  @Inject               var facesContext: FacesContext = _
-  @Inject @transient     var flash:Flash = _
-  @Inject                var session:HttpSession = _
-  @Inject  @transient    var request:HttpServletRequest = _
+  @BeanProperty
+  var user: User = new User
   
+  @BooleanBeanProperty
+  var loggedIn = false
+
   def isDeanery = user.role == RoleType.DEANERY
   def isTeacher = user.role == RoleType.TEACHER
 
   /**
    * Logout. Clear session.
    */
-  def logout:String = {
+  def logout: String = {
     request.logout
     if (session != null)
       session.invalidate
@@ -55,7 +60,7 @@ class Security {
    * Authenticate user using JavaEE6 authentication realm
    * @return <strong>navigate to:</strong> /home.xhtml if credentials are correct
    */
-  def login:String = {
+  def login: String = {
     try {
       val hpw = md5hash(user.password)
       request.login(user.email, hpw)

@@ -12,12 +12,11 @@ import javax.inject.Inject
  * @author Ingo Fischer
  * @version 1.0
  */
-class FacesLocaleResolver 
-{
+class FacesLocaleResolver {
   @Inject
-  var facesContext:FacesContext = _
+  var facesContext: FacesContext = _
 
-  def isActive:Boolean =
+  def isActive: Boolean =
     (facesContext != null) && (facesContext.getCurrentPhaseId != null)
 
   /**
@@ -25,7 +24,7 @@ class FacesLocaleResolver
    * @return Locale current Locale
    */
   @Produces
-  def getLocale:Locale = 
+  def getLocale: Locale =
     if (facesContext.getViewRoot != null)
       facesContext.getViewRoot.getLocale;
     else

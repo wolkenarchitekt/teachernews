@@ -5,7 +5,7 @@
  be automatically informed of important events concerning specific teachers or 
  university departments.
 
- This application was written as part of my Diploma Thesis, in which i evaluated 
+ This application was developed as part of my Diploma Thesis, in which i evaluated 
  Scala for implementing web applications on the Java EE 6 Platform.
  The following technologies are used by Teachernews:
   - Scala 2.8
@@ -22,11 +22,11 @@
  System requirements
  ===================
 
- To run this project you need Java 5.0 (Java SDK 1.5) or greater, Ant 1.8.0 or greater 
+ To run this project you need Java 6.0 (Java SDK 1.6) or greater, Ant 1.8.0 or greater 
  and Maven 2.2.1 or greater. Teachernews runs on Glassfish >=V3.0.1. 
  Furthermore, set the environment variable $M2_REPO to point to your local Maven
  repository, in my case this is:
-   C:\Users\ingo\.m2\repository
+   /home/user/.m2/repository
      
  If you already installed Glassfish and want to use that instance, you have to provide an 
  environment variable named $GLASSFISH that points to your Glassfish directory.
@@ -41,13 +41,13 @@
   
  Don't forget to provide your E-Mail-provider, otherwise messages cannot be send by mail.
  The configuration of Teachernews is managed by an Ant script, the compilation and deployment
- is managed by Maven.
+ are managed by Maven.
  There are two ways how to install the application:
  
  1) Use Embedded Glassfish
  
  If you just want to try the application without downloading or installing Glassfish, 
- you can use Embedded Glassfish. Teachernews then uses an in-memory database (not.
+ you can use Embedded Glassfish. Teachernews then uses an in-memory database.
  To configure Teachernews to use the Embedded Glassfish, change the properties file or run:
    ant -Dglassfish.embedded=true
   
@@ -67,10 +67,11 @@
  
  
  2) Use your local Glassfish installation
+ 
  If you already installed Glassfish, You can deploy Teachernews on that instance. 
  First, set the environment variable $GLASSFISH to point to your Glassfish directory, 
- in my case it is: 
-   C:\dev\glassfish-3.0.1\glassfish
+ for example: 
+   /home/user/dev/glassfish-3.0.1/glassfish
  
  Make sure that the directory contains the folder "config".
  Now you can configure the application from the command line by just running:

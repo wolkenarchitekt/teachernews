@@ -18,7 +18,7 @@
     <hibernate-validator.version>4.0.2.GA</hibernate-validator.version>
     <junit.version>4.8.1</junit.version>
     <testng.version>5.13</testng.version>
-    <maven.scala.plugin.version>2.13.1</maven.scala.plugin.version>
+    <maven.scala.plugin.version>2.14.2-SNAPSHOT</maven.scala.plugin.version>
     <ant-contrib.version>1.0b3</ant-contrib.version>
     <glassfish.home>${env.GLASSFISH}</glassfish.home>
     <glassfish.version>3.0.1</glassfish.version>
@@ -107,11 +107,6 @@
       <url>http://mirror.selfnet.de/eclipse/rt/eclipselink/maven.repo/</url>
     </repository>
     
-    <!-- Mirror repository, contains all dependencies -->
-    <repository>
-      <id>ingofischerNexus</id>
-      <url>http://ingofischer.de:8081/nexus/content/groups/public</url>
-    </repository>
   </repositories>
 
   <pluginRepositories>

@@ -3,7 +3,7 @@ package net.teachernews.producers
 import javax.enterprise.inject.Produces
 import javax.faces.context.FacesContext
 import javax.inject.Inject
-import java.util.{ResourceBundle,Locale}
+import java.util.{ ResourceBundle, Locale }
 
 /**
  * Produces ResourceBundle for injection.
@@ -14,16 +14,16 @@ import java.util.{ResourceBundle,Locale}
  */
 class ResourceBundleProducer {
   @Inject
-  var locale:Locale = _
+  var locale: Locale = _
 
   @Inject
-  var facesContext:FacesContext = _
+  var facesContext: FacesContext = _
 
   /**
    * Producer method
    * @return ResourceBundle
    */
   @Produces
-  def getResourceBundle:ResourceBundle = 
-    ResourceBundle.getBundle("/messages", locale )
+  def getResourceBundle: ResourceBundle =
+    ResourceBundle.getBundle("/messages", locale)
 }

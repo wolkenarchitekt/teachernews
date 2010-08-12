@@ -7,18 +7,16 @@ package net.teachernews.model;
  * @version 1.0
  */
 public enum RoleType {
-    STUDENT("STUDENT"),
-    TEACHER("TEACHER"),
-    DEANERY("DEANERY");
-    
-    private final String label;
+  STUDENT("STUDENT"), TEACHER("TEACHER"), DEANERY("DEANERY");
 
-    private RoleType(String label) {
-        this.label = label;
-    }
+  private final String label;
 
-    @Override
-    public String toString() {
-        return this.label;
-    }
+  private RoleType(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String toString() {
+    return this.label;
+  }
 }

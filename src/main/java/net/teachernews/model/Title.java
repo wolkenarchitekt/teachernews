@@ -7,16 +7,15 @@ package net.teachernews.model;
  * @version 1.0
  */
 public enum Title {
+  MR("Mr"), MS("Ms");
 
-    MR("Mr"), MS("Ms");
+  private final String title;
 
-    private final String title;
+  private Title(String title) {
+    this.title = title;
+  }
 
-    private Title(String title) {
-        this.title = title;
-    }
-
-    public String toString() {
-        return this.title;
-    }
+  public String toString() {
+    return this.title;
+  }
 }

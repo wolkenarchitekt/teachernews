@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest
  * @version 1.0
  */
 class RequestContextProducer {
-  @Inject       
-  var facesContext:FacesContext = _
+  @Inject
+  var facesContext: FacesContext = _
 
   /**
    * Producer method
@@ -23,6 +23,6 @@ class RequestContextProducer {
    */
   @Produces
   @RequestScoped
-  def getFlash:HttpServletRequest = 
+  def getFlash: HttpServletRequest =
     facesContext.getExternalContext.getRequest.asInstanceOf[HttpServletRequest]
 }

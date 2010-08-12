@@ -1,7 +1,7 @@
 package net.teachernews.producers
 
 import javax.enterprise.inject.Produces
-import javax.faces.context.{FacesContext, Flash}
+import javax.faces.context.{ FacesContext, Flash }
 import javax.inject.Inject
 
 /**
@@ -12,15 +12,15 @@ import javax.inject.Inject
  * @version 1.0
  */
 class FlashProducer {
-  @Inject       
-  var facesContext:FacesContext = _
+  @Inject
+  var facesContext: FacesContext = _
 
   /**
    * Producer method
    * @return Flash
    */
   @Produces
-  def getFlash:Flash = {
+  def getFlash: Flash = {
     facesContext.getExternalContext.getFlash
   }
 }

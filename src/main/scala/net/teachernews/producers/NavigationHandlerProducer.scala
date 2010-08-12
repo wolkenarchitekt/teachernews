@@ -15,14 +15,14 @@ import javax.inject.Inject
 class NavigationHandlerProducer {
   @Inject
   var context: FacesContext = _
-  
+
   /**
    * Producer method
    * @return NavigationHandler
    */
   @Produces
   @RequestScoped
-  def getNavigationHandler:NavigationHandler = {
+  def getNavigationHandler: NavigationHandler = {
     if (context != null) {
       val application = context.getApplication
       if (application != null)

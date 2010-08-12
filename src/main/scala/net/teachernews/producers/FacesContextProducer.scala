@@ -16,10 +16,11 @@ class FacesContextProducer {
   /**
    * @return FacesContext
    */
-  @Produces @RequestScoped
-  def getFacesContext:FacesContext = {
+  @Produces
+  @RequestScoped
+  def getFacesContext: FacesContext = {
     val ctx = FacesContext.getCurrentInstance;
-    if (ctx == null) 
+    if (ctx == null)
       throw new ContextNotActiveException("FacesContext is not active")
     ctx
   }
