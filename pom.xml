@@ -28,11 +28,11 @@
     <weld.extensions.version>1.0.0-CR2</weld.extensions.version>
     <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
   
-  <domain.adminport>4848</domain.adminport>
-  <domain.httpport>8080</domain.httpport>
-  <domain.httpsport>8443</domain.httpsport>
-  <domain.iiopport>3700</domain.iiopport>
-  <domain.jmsport>7676</domain.jmsport>
+    <domain.adminport>4848</domain.adminport>
+    <domain.httpport>8080</domain.httpport>
+    <domain.httpsport>8443</domain.httpsport>
+    <domain.iiopport>3700</domain.iiopport>
+    <domain.jmsport>7676</domain.jmsport>
   </properties>
 
   <repositories>
@@ -449,7 +449,6 @@
           <scalaVersion>${scala.version}</scalaVersion>
           <args>
             <arg>-target:jvm-1.5</arg>
-            <!-- to support mix java/scala only -->
             <arg>-make:transitivenocp</arg>
             <arg>-dependencyfile</arg>
             <arg>${project.build.directory}/.scala_dependencies</arg>
