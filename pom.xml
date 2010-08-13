@@ -429,15 +429,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <args>
-            <arg>-target:jvm-1.5</arg>
-            <!-- to support mix java/scala only -->
-            <arg>-make:transitivenocp</arg>
-            <arg>-dependencyfile</arg>
-            <arg>${project.build.directory}/.scala_dependencies</arg>
-          </args>
-        </configuration>
       </plugin>
 
       <!-- ================== MAVEN BUILD HELPER PLUGIN =================== -->
@@ -699,17 +690,8 @@
         <groupId>org.scala-tools</groupId>
         <artifactId>maven-scala-plugin</artifactId>
         <version>${maven.scala.plugin.version}</version>
-        <configuration>
-          <args>
-            <arg>-target:jvm-1.5</arg>
-            <!-- to support mix java/scala only -->
-            <arg>-make:transitivenocp</arg>
-            <arg>-dependencyfile</arg>
-            <arg>${project.build.directory}/.scala_dependencies</arg>
-          </args>
-        </configuration>
       </plugin>
-        
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
