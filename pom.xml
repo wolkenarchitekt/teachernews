@@ -410,23 +410,17 @@
           <execution>
             <id>compile</id>
             <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
+            <goals><goal>compile</goal></goals>
           </execution>
           <execution>
             <id>test-compile</id>
             <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
+            <goals><goal>testCompile</goal></goals>
           </execution>
           <execution>
             <id>process-resources</id>
             <phase>process-resources</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
+            <goals><goal>compile</goal></goals>
           </execution>
         </executions>
       </plugin>
@@ -496,6 +490,10 @@
             <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
             <classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>
           </classpathContainers>
+          <!-- Add all Scala files to Eclipse Java Build Path -->
+          <sourceIncludes>
+            <sourceInclude>**/*.scala</sourceInclude>
+          </sourceIncludes>
         </configuration>
       </plugin>
 
@@ -506,9 +504,10 @@
         <artifactId>maven-embedded-glassfish-plugin</artifactId>
         <version>3.0.1</version>
         <configuration>
-          <!-- 
+          <!-- Deploy as WAR 
           <app>${project.build.directory}/${build.finalName}.war</app>
            -->
+          <!-- Deploy as directory -->
           <app>${project.build.directory}/${project.build.finalName}</app>
           <port>7070</port>
           <containerType>all</containerType>
@@ -516,53 +515,7 @@
           <configFile>${basedir}/embedded-glassfish/domain.xml</configFile>
           <autoDelete>true</autoDelete>
           <instanceRoot>${basedir}/embedded-glassfish/gfe-${maven.build.timestamp}</instanceRoot>
-          <!-- 
-          <instanceRoot>${project.build.directory}</instanceRoot>
-          <goalPrefix>glassfish</goalPrefix>
-          <app>target/test.war</app>
-           -->
         </configuration>
-        <!-- 
-        <executions>
-          <execution>
-            <phase>install</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-        -->
-        <executions>
-           <execution>
-              <id>start-glassfish</id>
-              <phase>pre-integration-test</phase>
-              <goals>
-                 <goal>start</goal>
-              </goals>
-           </execution>
-           <execution>
-              <id>glassfish-deploy</id>
-              <phase>pre-integration-test</phase>
-              <goals>
-                 <goal>deploy</goal>
-              </goals>
-           </execution>
-           <execution>
-              <id>glassfish-undeploy</id>
-              <phase>post-integration-test</phase>
-              <goals>
-                 <goal>undeploy</goal>
-              </goals>
-           </execution>
-           <execution>
-              <id>stop-glassfish</id>
-              <phase>post-integration-test</phase>
-              <goals>
-                 <goal>stop</goal>
-              </goals>
-           </execution>
-        </executions> 
-        
       </plugin>
       
       <!--================= JREBEL PLUGIN =================-->
@@ -691,7 +644,7 @@
         <artifactId>maven-scala-plugin</artifactId>
         <version>${maven.scala.plugin.version}</version>
       </plugin>
-
+        
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
