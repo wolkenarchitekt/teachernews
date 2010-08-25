@@ -19,8 +19,7 @@ import net.teachernews.services.DAO
  */
 @Stateless
 @LocalBean
-@DeclareRoles(Array("DEANERY"))
-class SubscriptionEJB extends DAO[Subscription, Long] {
+class SubscriptionEJB extends DAO[Subscription] {
   
   override def findAll: ArrayList[Subscription] = {
     val cq = cb.createQuery(classOf[Subscription])

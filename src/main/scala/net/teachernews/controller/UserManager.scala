@@ -1,13 +1,16 @@
 package net.teachernews.controller
 
+import javax.annotation.PostConstruct
 import javax.enterprise.context.SessionScoped
 import javax.ejb.EJB
 import javax.inject.{ Named, Inject }
-import scala.reflect.BeanProperty
 import javax.faces.model.SelectItem
-import javax.faces.application.NavigationHandler
-import javax.faces.context.{ FacesContext, Flash }
-import java.util.{ Locale, ArrayList, ResourceBundle }
+import javax.faces.context.Flash 
+
+import java.util.{ ArrayList, ResourceBundle }
+
+import scala.reflect.BeanProperty
+
 import org.slf4j.Logger
 
 import net.teachernews.exceptions.{ ApplicationException, ExceptionType }
@@ -28,13 +31,10 @@ import net.teachernews.services.Security
 @Named
 @serializable
 class UserManager {
-  @EJB var userEJB: UserEJB = _
+  @Inject private var userEJB: UserEJB = _
   
-  @Inject var facesContext: FacesContext = _
-  @Inject var locale: Locale = _
-  @Inject var nav: NavigationHandler = _
-  @Inject var emailEJB: EmailEJB = _
-  @Inject var security: Security = _
+  @Inject private var emailEJB: EmailEJB = _
+  @Inject private var security: Security = _
 
   @Inject @transient var log: Logger = _
   @Inject @transient var bundle: ResourceBundle = _
@@ -45,9 +45,9 @@ class UserManager {
   
   @BeanProperty
   var confirmPassword: String = _
-
-  var oldMail: String = _
-  var oldPWHash: String = _
+  
+  private var oldMail: String = _
+  private var oldPWHash: String = _
 
   def getUsers: ArrayList[User] = userEJB.findAll
 
@@ -66,14 +66,14 @@ class UserManager {
   /**
    * Check passwords for equality
    */
-  def checkPasswordEquality =
+  private def checkPasswordEquality =
     if (user.getPassword != confirmPassword)
       throw new ApplicationException(ExceptionType.WrongPasswordConfirmation)
 
   /**
    * Check if user with E-Mail already exists
    */
-  def checkEmailAvailable = {
+  private def checkEmailAvailable = {
     val userList = userEJB.findBy(User_.email -> user.email);
     if (userList.size > 0)
       throw new ApplicationException(ExceptionType.EmailExistsException)

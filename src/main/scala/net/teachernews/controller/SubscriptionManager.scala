@@ -28,11 +28,10 @@ import net.teachernews.model.{ Message, Message_, Subscription, Subscription_, U
 @SessionScoped
 @Named
 @serializable
-@Inject
 class SubscriptionManager {
-  @EJB var subscriptionEJB: SubscriptionEJB = _
-  @EJB var userEJB: UserEJB = _
-  @EJB var messageEJB: MessageEJB = _
+  @Inject var subscriptionEJB: SubscriptionEJB = _
+  @Inject var userEJB: UserEJB = _
+  @Inject var messageEJB: MessageEJB = _
   
   @Inject var security: Security = _
   @Inject var conversation: Conversation = _
@@ -102,6 +101,13 @@ class SubscriptionManager {
   def setSubscriptions(subs: DualListModel[User]) = this.subscriptions = subs
 
   /**
+   * Get number of subscribers for currently logged in user
+   * @return number of subscribers 
+   */
+  def getSubscribersCount: Integer =
+    subscriptionEJB.findBy(Subscription_.sender -> security.user).size
+
+  /**
    * Get all messages from users the given user subscribed to. 
    * @param subscriber
    * @return messages regarding users the subscriber subscribed to
@@ -161,10 +167,4 @@ class SubscriptionManager {
     }
   }
 
-  /**
-   * Get number of subscribers for currently logged in user
-   * @return number of subscribers 
-   */
-  def getSubscribersCount: Integer =
-    subscriptionEJB.findBy(Subscription_.sender -> security.user).size
 }

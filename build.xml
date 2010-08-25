@@ -59,8 +59,14 @@
     </condition>
   </target>
   
-  <!-- 4.1 Use Embedded Glassfish -->
+  <!-- 4.1 Use Embedded Glassfish (only if embedded=true) -->
   <target name="configure-embedded-glassfish" depends="check-glassfish" if="use-embedded">
+	<!-- Fail if teachernews.properties hasn't been configured -->
+	<if>
+      <equals arg1="${conf.mail.embedded.host}" arg2="" />
+      <then><fail>Please configure Teachernews first by editing teachernews.properties (mail.embedded.host is not configured)</fail></then>
+    </if>
+  
     <echo>Configuring Embedded Glassfish</echo>
     <!-- Use persistence.xml with in-memory-DB -->
     <copy file="src/main/resources/META-INF/persistence-embedded.xml"
@@ -76,8 +82,14 @@
     <echo message="   mvn package embedded-glassfish:run"/>
   </target>
   
-  <!-- 4.2 Use Installed Glassfish -->
+  <!-- 4.2 Use Installed Glassfish (only if embedded=false)-->
   <target name="configure-installed-glassfish" depends="check-glassfish" unless="use-embedded">
+  	<!-- Fail if teachernews.properties hasn't been configured -->
+	<if>
+      <equals arg1="${conf.mail.host}" arg2="" />
+      <then><fail>Please configure Teachernews first by editing teachernews.properties (mail.host is not configured)</fail></then>
+    </if>
+
     <echo>Configuring Glassfish</echo>
     <if>
       <not>

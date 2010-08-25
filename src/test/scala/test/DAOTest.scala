@@ -54,6 +54,9 @@ class DAOTest {
   import DAOTest.messageEJB
   import DAOTest.subscriptionEJB
   
+  /**
+   * Test UserEJB: Insert some users
+   */
   @Test
   def testUserEJB = {
     val mmuster = new User
@@ -95,7 +98,7 @@ class DAOTest {
   }
   
   /**
-   * Test MessageEJB
+   * Test MessageEJB: Insert some messages
    */
   @Test(dependsOnMethods = Array("testUserEJB")) 
   def testMessageEJB = {
@@ -120,6 +123,9 @@ class DAOTest {
     assertEquals(messageEJB.findAll.size, 2)
   }
   
+  /**
+   * Test SubscriptionEJB: Insert some subscriptions
+   */
   @Test(dependsOnMethods = Array("testUserEJB")) 
   def testSubscriptionEJB = {
     val mmuster = userEJB.findBy(User_.email -> "mmustermann@example.com").get(0)

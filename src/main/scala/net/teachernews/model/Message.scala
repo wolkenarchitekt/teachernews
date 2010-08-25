@@ -44,9 +44,4 @@ class Message extends EntityBase {
       " regards=[" + regards + "]" +
       " version=[" + version + "]"
 
-  override def equals(other: Any): Boolean =
-    other match {
-      case that: Message => id == that.id
-      case _ => false
-    }
 }

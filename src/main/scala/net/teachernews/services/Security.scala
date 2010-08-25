@@ -4,10 +4,7 @@ import javax.ejb.EJB
 import javax.enterprise.context.SessionScoped
 import javax.inject.Inject
 import javax.inject.Named
-import javax.faces.context.{ FacesContext, Flash }
 import javax.servlet.http.{ HttpSession, HttpServletRequest }
-
-import org.slf4j.Logger
 
 import scala.reflect.{ BooleanBeanProperty, BeanProperty }
 
@@ -28,13 +25,9 @@ import net.teachernews.services.Application.md5hash
 @Named
 @serializable
 class Security {
-  @EJB var userEJB: UserEJB = _
-  
-  @Inject var facesContext: FacesContext = _
+  @Inject var userEJB: UserEJB = _
   @Inject var session: HttpSession = _
-
-  @Inject @transient var log: Logger = _
-  @Inject @transient var flash: Flash = _
+  
   @Inject @transient var request: HttpServletRequest = _
   
   @BeanProperty

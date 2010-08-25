@@ -68,9 +68,4 @@ class User extends EntityBase {
       " role=[" + role + "]" +
       " version=[" + version + "]"
 
-  override def equals(other: Any): Boolean =
-    other match {
-      case that: User => id == that.id
-      case _ => false
-    }
 }

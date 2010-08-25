@@ -9,7 +9,7 @@ import javax.persistence.{ MappedSuperclass, Version }
  * @version 1.0
  */
 @MappedSuperclass
-abstract class EntityBase {
+trait EntityBase {
   @Version
   var version: Long = _
 
@@ -21,8 +21,14 @@ abstract class EntityBase {
    * in the EntityBase is commented out and implemented in every Entity 
    *
    * @Id @GeneratedValue @BeanProperty
-   * protected var id: Long = _
+   * var id: Long = _
    */
 
-  def equals(other: Any): Boolean
+  var id: Long
+  
+  override def equals(other: Any): Boolean =
+    other match {
+      case that: EntityBase => id == that.id
+      case _ => false
+  }
 }

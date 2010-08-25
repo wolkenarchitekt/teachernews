@@ -23,11 +23,7 @@ import org.slf4j.Logger
 @Stateless
 @LocalBean
 @DeclareRoles(Array("TEACHER", "DEANERY"))
-class MessageEJB extends DAO[Message, Long] {
-  @Inject
-  @transient
-  var log: Logger = _
-
+class MessageEJB extends DAO[Message] {
   @RolesAllowed(Array("TEACHER", "DEANERY"))
   override def persist(m: Message) = em.persist(m)
 

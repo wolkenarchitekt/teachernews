@@ -79,7 +79,6 @@
         <h:commandButton id="insert"
           action="#{userManager.confirmModifications}"
           value="#{bundle['application.saveModifications']}">
-          <!--<f:ajax render="@form" />-->
         </h:commandButton>
         <h:commandButton id="remove" action="#{userManager.removeUser}"
           rendered="#{(security.deanery) and 

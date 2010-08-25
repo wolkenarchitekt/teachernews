@@ -39,9 +39,6 @@ class CustomExceptionHandler(private val parent: ExceptionHandler) extends Excep
 
   override def getWrapped: ExceptionHandler = parent
 
-  //  val ctx:Context = new InitialContext
-  //  val logger = ctx.lookup("java:global/teachernews/UserEJB").asInstanceOf[UserEJB]
-
   val log: Logger = LoggerFactory.getLogger(classOf[CustomExceptionHandler]);
 
   /**
@@ -67,7 +64,7 @@ class CustomExceptionHandler(private val parent: ExceptionHandler) extends Excep
       val context = event.getSource.asInstanceOf[ExceptionQueuedEventContext]
       val exception = context.getException
 
-      // Handle Framework Exceptions
+      // Handle Framework Exceptions 
       if (exception.isInstanceOf[ViewExpiredException] ||
         exception.isInstanceOf[NonexistentConversationException] ||
         exception.isInstanceOf[ContextNotActiveException]) {
@@ -83,19 +80,20 @@ class CustomExceptionHandler(private val parent: ExceptionHandler) extends Excep
           // remove exception from queue
           eventsIterator.remove
         }
-      } // Handle Custom Exceptions
+      } 
+    // Handle Custom Exceptions
       else {
         // Search for a RuntimeException in Queue
         var appExc: ApplicationException = null
         try {
+          // ApplicationException has to be unwrapped:
+          // FacesException.FacesException.EvaluationException.ApplicationException
           appExc = exception.getCause.getCause.getCause.asInstanceOf[ApplicationException]
         } catch {
           case ex => ; // Do nothing; other exceptions are handled by the parent
         }
         if (appExc != null)
           try {
-            // Exception wrapped:
-            // FacesException.FacesException.EvaluationException.ApplicationException
             flash.put("exceptionType", "exception." + appExc.message)
             flash.put("exceptionCause", appExc.cause)
             nav.handleNavigation(fc, null, currentPage)

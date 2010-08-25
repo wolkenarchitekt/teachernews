@@ -85,7 +85,6 @@ class EmailEJB {
    */
   @Asynchronous
   def sendEmails(sender: User, message: TNMessage): Future[ApplicationException] = {
-    log.info("Sending mail.")
     // Reset progress
     val msg: javax.mail.Message = new MimeMessage(mailSession)
     setFromParameters(msg)
@@ -104,6 +103,7 @@ class EmailEJB {
       dateString)
     msg.setText(message.content + bundle.getString("message.mail.appendix"))
     try {
+      log.info("Sending " + subscriptions.size + " mails.")
       Transport.send(msg)
     } catch {
       case ex: Exception => {

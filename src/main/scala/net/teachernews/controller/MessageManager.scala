@@ -32,17 +32,17 @@ import net.teachernews.services.Security
 @Named
 @serializable
 class MessageManager {
-  @EJB var messageEJB: MessageEJB = _
-  @EJB var emailEJB: EmailEJB = _
-  @EJB var subscriptionEJB: SubscriptionEJB = _
+  @Inject private var messageEJB: MessageEJB = _
+  @Inject private var emailEJB: EmailEJB = _
+  @Inject private var subscriptionEJB: SubscriptionEJB = _
   
-  @Inject  @transient var flash: Flash = _
-  @Inject @transient var log: Logger = _
+  @Inject @transient private var flash: Flash = _
+  @Inject @transient private var log: Logger = _
   
-  @Inject  var security: Security = _
-  @Inject var conversation: Conversation = _
-  @Inject var nav: NavigationHandler = _
-  @Inject var fc: FacesContext = _
+  @Inject private var security: Security = _
+  @Inject private var conversation: Conversation = _
+  @Inject private var nav: NavigationHandler = _
+  @Inject private var fc: FacesContext = _
 
   @BeanProperty 
   var message: Message = new Message
@@ -50,7 +50,7 @@ class MessageManager {
   @BooleanBeanProperty
   var sendAsEmail: Boolean = false
 
-  var progress: Future[ApplicationException] = _
+  private var progress: Future[ApplicationException] = _
 
   /**
    * If exception during sending emails occured, this variable holds it

@@ -112,20 +112,30 @@
  the following update site to Eclipse:
    http://download.scala-ide.org/update-current
   
- Once that is installed, you'll be ready to import the project into Eclipse.
- Select File > Import... and select "Import... > Maven Projects" and select
- the teachernews root directory. m2eclipse should take it from there.
- Once in the IDE, you can execute the Maven commands through the IDE controls
- to run the application on an embedded Servlet Container.
+ Before you import the project into Eclipse, let Maven create the necessary Eclipse project 
+ configuration (please don't import the project as "Maven project", otherwise Eclipse will miss 
+ some necessary project settings) by running
+   mvn eclipse:eclipse
+ on the commandline.
+ Once the project is created, you'll be ready to import the project into Eclipse.
+ Select File > Import... and select "Import... > Existing Projects" and select
+ the teachernews root directory. 
+ 
  If you're using Eclipse 3.5 and want to start (and debug) Glassfish from within Eclipse, 
  i'd recommend updating the Eclipse WTP by adding the following update site:
    http://download.eclipse.org/webtools/updates/
+   
+ After the first import of the project, let M2Eclipse create the proper Eclipse-Project
+ configuration (considering all classpath issues and adding Scala nature) by right-clicking
+ on the project inside the project explorer, selecting 
+   Maven/Update Project Configuration
   
  There, under "Web, XML, and Java EE Development", you can choose all plugins you need.
  You'll need the GlassfishV3 Server Adapter, available at the following update site 
  (you MUST update WTP tools first):
    https://ajax.dev.java.net/eclipse/
-  
+   
+
  Maven / Ant command overview
  ============================
  When Glassfish is already configured and you are using Apache Derby as database, 

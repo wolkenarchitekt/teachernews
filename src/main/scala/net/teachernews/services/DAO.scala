@@ -16,7 +16,7 @@ import java.util.ArrayList
  * @author Ingo Fischer
  * @version 1.0
  */
-trait DAO[T, K <: Serializable] {
+trait DAO[T] {
   @PersistenceContext
   var em: EntityManager = _
 
@@ -62,4 +62,6 @@ trait DAO[T, K <: Serializable] {
   def findBy[A](attributes: AttributeValuePair[_]*): ArrayList[T]
 
 }
+
+
 

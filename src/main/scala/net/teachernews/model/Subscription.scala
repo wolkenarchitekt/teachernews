@@ -33,9 +33,4 @@ class Subscription extends EntityBase {
   " subscriber=[" + subscriber + "]"
   " sender=[" + sender + "]"
 
-  override def equals(other: Any): Boolean =
-    other match {
-      case that: Subscription => id == that.id
-      case _ => false
-    }
 }

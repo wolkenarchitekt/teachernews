@@ -19,4 +19,5 @@ public class Message_ {
   public static volatile SingularAttribute<Message, String> content;
   public static volatile SingularAttribute<Message, Date> expirationDate;
   public static volatile SingularAttribute<Message, User> regards;
+  
 }

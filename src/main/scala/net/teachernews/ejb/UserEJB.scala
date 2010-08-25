@@ -21,7 +21,7 @@ import net.teachernews.services.DAO
 @Stateless
 @LocalBean
 @DeclareRoles(Array("DEANERY"))
-class UserEJB extends DAO[User, Long] {
+class UserEJB extends DAO[User] {
 
   @RolesAllowed(Array("DEANERY"))
   override def remove(u: User) = em.remove(em.merge(u)) 
