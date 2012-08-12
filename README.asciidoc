@@ -1,4 +1,4 @@
- = Teachernews
+= Teachernews
 
 With the help of the application Teachernews, students can subscribe to newsfeeds and 
 be automatically informed of important events concerning specific teachers or 
